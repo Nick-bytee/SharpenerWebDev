@@ -11,3 +11,15 @@ for(let i = 0; i<list.length; i++){
 const li = document.getElementsByTagName('li')
 li[4].style.fontWeight = '900'
 li[4].style.backgroundColor = 'grey'
+
+list[1].style.backgroundColor = 'green'
+list[2].style.display = "none";
+
+const list2 = document.querySelectorAll('list-group-item')
+list[1].style.color = 'darkgreen'
+
+const odd = document.querySelectorAll('li:nth-child(odd')
+
+for(let i = 0; i<odd.length; i++){
+    odd[i].style.backgroundColor = 'green'
+}
