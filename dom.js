@@ -1,75 +1,54 @@
-// const header = document.getElementById("main-header")
-// const item1 = document.getElementById("item1")
-// header.style.borderBottom = 'solid 3px black'
-// //item1.style.fontWeight = '900'
-// //item1.style.color = 'green'
-// const list = document.getElementsByClassName("list-group-item")
-// list[2].style.backgroundColor = 'green'
-// for(let i = 0; i<list.length; i++){
-//     list[i].style.fontWeight = '900'
-// }
-// const li = document.getElementsByTagName('li')
-// li[4].style.fontWeight = '900'
-// li[4].style.backgroundColor = 'grey'
+var form = document.getElementById('addForm')
+var items = document.getElementById('items')
 
-// list[1].style.backgroundColor = 'green'
-// list[2].style.display = "none";
+form.addEventListener('submit', additem)
 
-// const list2 = document.querySelectorAll('list-group-item')
-// list[1].style.color = 'darkgreen'
+items.addEventListener('click', deleteitem)
 
-// const odd = document.querySelectorAll('li:nth-child(odd')
+//additem function
+function additem(e){
+    e.preventDefault();
+    console.log('Test')
+    //create new li element
+    var li = document.createElement('li');
 
-// for(let i = 0; i<odd.length; i++){
-//     odd[i].style.backgroundColor = 'green'
-// }
+    //get input data
+    var item = document.getElementById('item').value;
 
-var itemlist = document.querySelector('#items')
-//parentNode
-//itemlist.parentNode.style.backgroundColor = '#f4f4f4'
-//parentElement
-itemlist.parentElement.style.backgroundColor = '#f4f4f4'
+    //add class to li
+    li.className = 'list-group-item'
 
-//lastelementchild
-itemlist.lastElementChild.style.color = 'green'
+    // add textnode to li element
+    li.appendChild(document.createTextNode(item))
 
-//lastchild
-//console.log(itemlist.lastChild) //pointing to text which is a linebreak
+    //create delete button
+    var deletebtn = document.createElement('button')
 
-//create a div
-var newdiv = document.createElement('div');
-//add a class
-newdiv.className = 'Hello';
-//add id
-newdiv.id = 'newdiv'
-//add attribute
-newdiv.setAttribute('title', 'Hello Div')
+    //set button class
+    deletebtn.className = 'btn btn-danger btn-sm float-right delete' 
 
-//create text node
-textdiv = document.createTextNode('hello world')
+    //edit button
+    var editbtn = document.createElement('button')
 
-//add text to div
-newdiv.appendChild(textdiv); 
+    //edit button class
+    editbtn.className = 'btn btn-danger btn-sm float-right edit'
+    editbtn.appendChild(document.createTextNode('Edit'))
 
-//adding to dom
-var container = document.querySelector('.container');
-var h1 = document.querySelector('header h1')
+    deletebtn.appendChild(document.createTextNode('Delete'))
 
-container.insertBefore(newdiv,  h1)
+    li.appendChild(editbtn)
+    li.appendChild(deletebtn)
 
-newdiv.style.fontSize = '30px'
-//creating element
-var newcontainer = document.querySelector('div .list-group')
-var h2 = document.querySelector('div li')
+    //add item to list
+    items.appendChild(li);
 
-var text = document.createElement('div')
-text.className = 'title'
-text.setAttribute('title', 'Hello World')
-t = document.createTextNode('Hello World')
-text.append(t)
-text.style.fontSize = '20px'
-
-newcontainer.insertBefore(text, h2)
-
-
-console.log(h2)
+    
+}
+function deleteitem(a){
+    if(a.target.classList.contains('delete')){
+        if(confirm('Are You Sure You want to delete selected this item?')){
+            var li = a.target.parentElement
+            items.removeChild(li)
+        };
+    };
+};
