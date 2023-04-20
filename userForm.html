@@ -52,9 +52,18 @@
     function saveDetails(event) {
       // Prevent the form from submitting and reloading the page
       event.preventDefault();
-      var name = document.getElementById('name').value;
-      var email = document.getElementById('email').value;
-      localStorage.setItem(name, email)
+      var username = document.getElementById('name').value;
+      var useremail = document.getElementById('email').value;
+      let my_obj = {
+        name: username,
+        email : useremail 
+      }
+
+      my_objSerialised = JSON.stringify(my_obj);
+      
+      localStorage.setItem("userDetails", my_objSerialised)
+
+      console.log(localStorage.getItem("userDetails"))
     }
   </script>
 
