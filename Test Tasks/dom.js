@@ -1,12 +1,10 @@
 var form = document.getElementById('addForm')
 var items = document.getElementById('items')
 var filter = document.getElementById('filter')
-
-
 form.addEventListener('submit', additem)
-
 items.addEventListener('click', deleteitem)
 filter.addEventListener('keyup', search_ele)
+
 //additem function
 function additem(e){
     e.preventDefault();
