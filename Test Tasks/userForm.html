@@ -21,8 +21,7 @@
 </head>
 
 <body>
-  <div class="container "
-  style="max-width: 700px
+  <div class="container " style="max-width: 700px
   ;">
 
     <form>
@@ -37,14 +36,14 @@
         <input type="email" id="email" name="email" class="form-control" placeholder="E-mail">
       </div>
       <br>
-      </div>
-          <div class="mt-2 text-center" >
-              <input type="submit" class="btn btn-primary">
-          </div>
-    </form>
-    <ul id="userList">
-      <li class="list-group-item" ></li>
-    </ul>
+  </div>
+  <div class="mt-2 text-center">
+    <input type="submit" class="btn btn-primary">
+  </div>
+  </form>
+  <ul id="userList">
+    <li class="list-group-item"></li>
+  </ul>
 
 
 
@@ -55,6 +54,7 @@
 
     const form = document.querySelector('form');
     form.addEventListener('submit', saveDetails);
+
     function saveDetails(event) {
       // Prevent the form from submitting and reloading the page
       event.preventDefault();
@@ -62,19 +62,62 @@
       var useremail = document.getElementById('email').value;
       let my_obj = {
         name: username,
-        email : useremail 
+        email: useremail
       }
-
       my_objSerialised = JSON.stringify(my_obj);
-      
       localStorage.setItem(useremail, my_objSerialised)
 
       //adding users to list and displaying them
       var li = document.createElement('li')
-      var details = document.createTextNode(username + ' ' + useremail)
+      var button = document.createElement('button')
+      var details = document.createTextNode(username + ' | ' + useremail)
+      button.className = "btn btn-danger btn-sm float-right delete"
+      button.appendChild(document.createTextNode(' Delete'))
+
+      //adding edit button 
+      var editbtn = document.createElement('button')
+      editbtn.appendChild(document.createTextNode('Edit'))
+      editbtn.className = "btn btn-dark btm-sm float-right edit"
+
       li.appendChild(details)
+      li.appendChild(button)
+      li.appendChild(editbtn)
       items.appendChild(li)
+
     }
+
+    //delete items from list and local storage
+    items.addEventListener('click', deleteitem)
+    function deleteitem(e) {
+      e.preventDefault();
+      if (e.target.classList.contains('delete')) {
+        if (confirm('Are you sure you want to delete this entry?')) {
+          var li = e.target.parentElement;
+          var details = li.childNodes[0].textContent.split(' | ')
+          localStorage.removeItem(details[1])
+          items.removeChild(li)
+        }
+      }
+      e.stopPropagation()
+    }
+
+
+    //edit button function
+    items.addEventListener('click', editdetails)
+    function editdetails(e) {
+      if (e.target.classList.contains('edit')) {
+        let li = e.target.parentElement
+        var namebox = document.getElementById('name');
+        var emailBox = document.getElementById('email');
+        var details = li.childNodes[0].textContent.split(' | ');
+        namebox.value = details[0];
+        emailBox.value = details[1];
+        localStorage.removeItem(details[1]);
+        items.removeChild(li);
+      }
+    }
+
+
   </script>
 
 
