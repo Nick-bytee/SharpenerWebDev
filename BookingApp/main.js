@@ -1,6 +1,7 @@
 var table = document.getElementById("table");
 const form = document.getElementById("form");
 form.addEventListener("submit", saveDetails);
+var submitButton = document.getElementById("submit");
 
 function showdata(arr) {
   table.innerHTML = "";
@@ -42,10 +43,10 @@ function showdata(arr) {
     icon2.style.width = "24px";
     editbtn.appendChild(icon2);
 
-    // //edit button eventlistener
-    // editbtn.addEventListener('click',function(){
-    //     editItem(i)
-    // })
+    //edit button eventlistener
+    editbtn.addEventListener("click", function () {
+      editItem(items);
+    });
 
     //adding buttons to tr element
     tr.appendChild(deletebtn);
@@ -60,54 +61,98 @@ function showdata(arr) {
 function saveDetails(event) {
   // Prevent the form from submitting and reloading the page
   event.preventDefault();
-  var username = document.getElementById("name").value;
-  var useremail = document.getElementById("email").value;
-  var phone = document.getElementById("phone").value;
-  let my_obj = {
-    name: username,
-    email: useremail,
-    phone: phone,
-  };
-  axios
-    .post(
-      "https://crudcrud.com/api/0196d801848348f199f7a301753752de/userDetails",
-      my_obj
-    )
-    .then(
-      axios
-        .get(
-          "https://crudcrud.com/api/0196d801848348f199f7a301753752de/userDetails"
-        )
-        .then((data) => {
-          showdata(data.data);
-        })
-        .catch((err) => console.log(err))
-    );
+  if (submitButton.value == "submit") {
+    var username = document.getElementById("name").value;
+    var useremail = document.getElementById("email").value;
+    var phone = document.getElementById("phone").value;
+    let my_obj = {
+      name: username,
+      email: useremail,
+      phone: phone,
+    };
+    axios
+      .post(
+        "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails",
+        my_obj
+      )
+      .then(() => {
+        axios
+          .get(
+            "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails"
+          )
+          .then((data) => {
+            showdata(data.data);
+          })
+          .catch((err) => console.log(err));
+      });
+  }
 }
 
 //delete function
 function deleteItem(id) {
   axios
     .delete(
-      `https://crudcrud.com/api/0196d801848348f199f7a301753752de/userDetails/${id}`
+      `https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails/${id}`
     )
-    .then(() =>{
+    .then(() => {
       return axios
         .get(
-          "https://crudcrud.com/api/0196d801848348f199f7a301753752de/userDetails"
+          "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails"
         )
         .then((data) => {
           showdata(data.data);
         })
-        .catch((err) => console.log(err))
-    }
-    );
+        .catch((err) => console.log(err));
+    });
+}
+
+//edit function
+function editItem(obj) {
+  submitButton.value = "Save";
+  submitButton.id = "save";
+  submitButton.classList.remove("btn-primary");
+  submitButton.classList.add("btn-success");
+  document.getElementById("name").value = obj.name;
+  document.getElementById("phone").value = obj.phone;
+  document.getElementById("email").value = obj.email;
+
+  var saveButton = document.getElementById("save");
+  saveButton.addEventListener("click", () => {
+    console.log("working");
+    axios
+      .put(
+        `https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails/${obj._id}`,
+        {
+          name: document.getElementById("name").value,
+          phone: document.getElementById("phone").value,
+          email: document.getElementById("email").value,
+        }
+      )
+      .then(() => {
+        return axios
+          .get(
+            "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails"
+          )
+          .then((data) => {
+            document.getElementById("name").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("email").value = "";
+            saveButton.value = "Submit";
+            saveButton.id = "submit";
+            saveButton.classList.remove("btn-success");
+            saveButton.classList.add("btn-primary");
+
+            showdata(data.data);
+          })
+          .catch((err) => console.log(err));
+      });
+  });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   axios
     .get(
-      "https://crudcrud.com/api/0196d801848348f199f7a301753752de/userDetails"
+      "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails"
     )
     .then((data) => {
       showdata(data.data);
