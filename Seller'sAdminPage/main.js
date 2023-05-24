@@ -8,6 +8,7 @@ var obj = {
 };
 
 var totalPrice = 0;
+total.innerHTML = 0
 
 function additems(e) {
   e.preventDefault();
@@ -16,7 +17,6 @@ function additems(e) {
   let name = document.getElementById("name").value;
   let price = document.getElementById("price").value;
 
-  totalPrice += Number(price);
   let obj = {
     name: name,
     price: price,
@@ -33,7 +33,6 @@ function additems(e) {
           "https://crudcrud.com/api/5e73261ca9b24d1ea83468eb29748c4f/productDetails"
         )
         .then((values) => {
-          total.innerHTML = totalPrice
           showItems(values.data);
         })
         .catch((err) => console.log(err));
@@ -44,10 +43,12 @@ function additems(e) {
 
 function showItems(arr) {
   table.innerHTML = "";
+  totalPrice = 0
   document.getElementById("total").value = totalPrice;
 
   for (let i = 0; i < arr.length; i++) {
     var item = arr[i];
+    totalPrice += Number(item.price)
 
     let tr = document.createElement("tr");
 
@@ -77,10 +78,12 @@ function showItems(arr) {
     tr.appendChild(deletebtn);
 
     items.appendChild(tr);
+    total.innerHTML = totalPrice
   }
 }
 
 function deleteItem(obj) {
+  totalPrice = 0
   axios
     .delete(
       `https://crudcrud.com/api/5e73261ca9b24d1ea83468eb29748c4f/productDetails/${obj._id}`
@@ -91,6 +94,7 @@ function deleteItem(obj) {
           "https://crudcrud.com/api/5e73261ca9b24d1ea83468eb29748c4f/productDetails"
         )
         .then((values) => {
+          total.innerHTML = totalPrice
           showItems(values.data);
         })
         .catch((err) => console.log(err));
