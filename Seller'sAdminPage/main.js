@@ -10,7 +10,7 @@ var obj = {
 var totalPrice = 0;
 total.innerHTML = 0
 
-function additems(e) {
+async function additems(e) {
   e.preventDefault();
 
   //creating object of name and price
@@ -22,22 +22,20 @@ function additems(e) {
     price: price,
   };
 
-  axios
-    .post(
-      "https://crudcrud.com/api/5e73261ca9b24d1ea83468eb29748c4f/productDetails",
+  try {
+    await axios.post(
+      "https://crudcrud.com/api/a70b37b42d054fd18a9fc1d1f0c84a20/productDetails",
       obj
-    )
-    .then(() => {
-      axios
-        .get(
-          "https://crudcrud.com/api/5e73261ca9b24d1ea83468eb29748c4f/productDetails"
-        )
-        .then((values) => {
-          showItems(values.data);
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
+    );
+
+    const values = await axios.get(
+      "https://crudcrud.com/api/a70b37b42d054fd18a9fc1d1f0c84a20/productDetails"
+    );
+
+    showItems(values.data);
+  } catch (err) {
+    console.log(err);
+  }
 
 }
 
@@ -82,35 +80,35 @@ function showItems(arr) {
   }
 }
 
-function deleteItem(obj) {
+async function deleteItem(obj) {
   totalPrice = 0
-  axios
-    .delete(
-      `https://crudcrud.com/api/5e73261ca9b24d1ea83468eb29748c4f/productDetails/${obj._id}`
+  try {
+    await axios
+      .delete(
+        `https://crudcrud.com/api/a70b37b42d054fd18a9fc1d1f0c84a20/productDetails/${obj._id}`
+      )
+    const values = await axios.get(
+      "https://crudcrud.com/api/a70b37b42d054fd18a9fc1d1f0c84a20/productDetails"
     )
-    .then(() => {
-      axios
-        .get(
-          "https://crudcrud.com/api/5e73261ca9b24d1ea83468eb29748c4f/productDetails"
-        )
-        .then((values) => {
-          total.innerHTML = totalPrice
-          showItems(values.data);
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
+
+    total.innerHTML = totalPrice
+    showItems(values.data);
+  } catch (err) {
+    console.log(err)
+  };
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  axios
-    .get(
-      "https://crudcrud.com/api/5e73261ca9b24d1ea83468eb29748c4f/productDetails"
-    )
-    .then((values) => {
-      showItems(values.data);
-    })
-    .catch((err) => console.log(err));
+window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const response = await axios.get(
+      "https://crudcrud.com/api/a70b37b42d054fd18a9fc1d1f0c84a20/productDetails"
+    );
+
+    const values = response.data;
+    showItems(values);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 console.log(totalPrice)
