@@ -1,34 +1,35 @@
-const http = require('http')
-const path = require('path')
-const server = http.createServer((req,res) =>{
-    res.setHeader('Content-Type','text/html')
+const http = require("http");
+const fs = require("fs");
 
-    if(req.url === '/node'){
-        console.log(req.url, req.headers, req.method)
-        res.write('<html>')
-        res.write('<head><title>Node JS</title></head>')
-        res.write('<body><h1>Welcome to my node js project</h1></body>')
-        res.write('</html>')
-        res.end()
-    }
-    else if(req.url === '/home'){
-        res.write('<html>')
-        res.write('<head><title>Home</title></head>')
-        res.write('<body><h1>Welcome Home</h1></body>')
-        res.write('</html>')
-        res.end()  
-    }else if(req.url === '/about'){
-        res.write('<html>')
-        res.write('<head><title>About</title></head>')
-        res.write('<body><h1>This is about Page</h1></body>')
-        res.write('</html>')
-        res.end()
-    };
-    res.write('<html>')
-        res.write('<head><title>Main</title></head>')
-        res.write('<body><h1>This is main page</h1></body>')
-        res.write('</html>')
-        res.end()
+const server = http.createServer((req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  const method = req.method;
+  if (req.url === "/") {
+    const data = fs.readFileSync('message.txt','utf8',(_err,data)=>{
+      return data
+    })
+    res.write("<html>");
+    res.write("<head><title>Node JS</title></head>");
+    res.write(
+      `<body><p>${data}</p><form action="/message" method="POST"><input type="text" name ="message"><button type="submit">Submit</button></input></form></body>`
+    );
+    res.write("</html>");
+    return res.end();
+  }
+  if (req.url === "/message" && method === "POST") {
+    const body = [];
+    req.on("data", (chunks) => {
+      body.push(chunks);
+    });
+    req.on("end", () => {
+      const parsedData = Buffer.concat(body).toString();
+      const message = parsedData.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+      res.statusCode = 302;
+      res.setHeader("Location", "/");
+      return res.end();
+    });
+  }
 });
 
-server.listen(4000,'localhost')
+server.listen(4000, "localhost");
