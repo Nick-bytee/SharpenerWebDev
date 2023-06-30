@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    <form action="/home">
+        <input type="text" id="username" placeholder="username"></input>
+        <button type="submit" id="delete">Login</button></form>
+
+        <script>
+            const userName = document.getElementById('username')
+            const del = document.getElementById('delete')
+            del.addEventListener('click',() =>{
+                localStorage.setItem('username',userName.value)
+            })
+        </script>
+</body>
+
+
+</html>
