@@ -1,16 +1,18 @@
 const exp = require("express");
 
 const router = exp.Router();
+const dirname = require('/Users/Nick/Desktop/Development/SharpenerWebDev/expressJS/utils/path');
+const path = require('path')
 
-router.get("/add-product", (req, res) => {
-  res.send(
-    '<form action="/" method="POST"><input type="text" name="productTitle" placeholder="Title"></input><input type="text" name="quantity" placeholder="Size"></input><button type = "submit">Add Product</button></form>'
+router.get("/add-products", (req, res) => {
+  res.sendFile(path.join(dirname,'views','admin.html')
   );
 });
 
+
 router.post("/products", (req, res) => {
   console.log(req.body)
-  res.send('<h1>This is the products page</h1>')
+  res.sendFile(path.join(dirname,'views','products.html'))
 });
 
 module.exports = router;

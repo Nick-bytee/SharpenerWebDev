@@ -1,18 +1,20 @@
 const exp = require('express')
 const app = exp()
-const bodyParser = require('body-parser')
+const path = require('path')
 
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
+const contactRoute = require('./routes/contact')
+const successRoute = require('./routes/success')
 
-
-
-
+app.use(exp.static(path.join((__dirname,'public'))))
+app.use(shopRoutes)
 app.use('/admin',adminRoutes)
-app.use('/shop',shopRoutes)
+app.use('/contact-us',contactRoute)
+app.use('/success',successRoute)
 
-app.use((req,res,next) => {
-    res.status(404).send('<h1>Page Not Found</h1>')
+app.use((req,res) => {
+    res.sendFile(path.join(__dirname,'views','404.html'))
 })
 
 app.listen(3001)
