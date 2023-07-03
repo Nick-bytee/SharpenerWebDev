@@ -1,11 +1,8 @@
 const exp = require('express');
-const path = require('path')
-const dir = require('../utils/path')
 
 const router = exp.Router()
+const contactFormController = require('../controllers/contact')
 
-router.post('/',(_req,res) => {
-    res.sendFile(path.join(dir,'views','success.html'))
-})
+router.post('/', contactFormController.postForm)
 
 module.exports = router
