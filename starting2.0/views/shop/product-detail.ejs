@@ -8,6 +8,7 @@
             <hr>
             <img src="<%- product.imageUrl %>" alt="<%- product.title %>">
             <h2><%- product.description %></h2>
-            <a href="" class="btn">Add to Cart</a>
+            <%- include('../includes/cart.ejs') %>
+            
         </main>
         <%- include('../includes/end.ejs') %>
