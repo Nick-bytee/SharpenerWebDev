@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const db = require('../util/SQLDatabase')
 
 const p = path.join(
   path.dirname(process.mainModule.filename),
@@ -27,42 +28,20 @@ module.exports = class Product {
   }
 
   static deleteProduct(id) {
-    getProductsFromFile(products => {
-      const prodIndex = products.findIndex(p => p.id === id);
-      products.splice(prodIndex,1)
-      fs.writeFile(p, JSON.stringify(products), err => {
-        console.log(err)
-      })
-      })
+    return db.execute('DELETE FROM products WHERE products.id = ?',[id])
   }
 
   save() {
-    getProductsFromFile(products => {
-      if (this.id) {
-        const prodIndex = products.findIndex(p => p.id === this.id)
-        const updatedProduct = [...products]
-        updatedProduct[prodIndex] = this;
-        fs.writeFile(p, JSON.stringify(updatedProduct), err => {
-          console.log(err)
-        })
-      } else {
-        this.id = Math.random().toString()
-        products.push(this);
-        fs.writeFile(p, JSON.stringify(products), err => {
-          console.log(err);
-        });
-      }
-    });
+    return db.execute('INSERT INTO products (title, price, description, imageUrl) VALUES(?,?,?,?)',
+    [this.title, this.price, this.description, this.imageUrl])
   }
 
   static fetchAll(cb) {
-    getProductsFromFile(cb);
+    return db.execute('SELECT * FROM products')
   }
 
   static findProduct(id, cb) {
-    getProductsFromFile(products => {
-      const product = products.find(p => p.id === id)
-      cb(product)
-    })
+    return db.execute('SELECT * FROM products WHERE products.id = ?',
+    [id])
   }
 };

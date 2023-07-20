@@ -15,14 +15,17 @@ exports.postAddProduct = (req, res, next) => {
   const price = parseInt(priceInt)
   const description = req.body.description;
   const product = new Product(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect('/');
+  product.save().then(
+    res.redirect('/')
+  )
+  .catch(err => console.log(err));
 };
 
 exports.deleteProduct = (req, res, next) => {
   const id = req.params.pid
-  Product.deleteProduct(id)
-  res.redirect('/admin/products')
+  Product.deleteProduct(id).then(
+    res.redirect('/admin/products')
+  ).catch(err => console.log(err))
 }
 
 //Replacing Edited Product
@@ -57,11 +60,11 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll(products => {
+  Product.fetchAll().then(([products]) => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
       path: '/admin/products'
     });
-  });
+  })
 };
