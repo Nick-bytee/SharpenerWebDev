@@ -25,4 +25,4 @@ const Product = sequelize.define('product', {
 }
 )
 
-module.exports = Product
+module.exports = Product;
