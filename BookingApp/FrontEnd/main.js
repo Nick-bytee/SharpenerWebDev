@@ -31,7 +31,7 @@ function showdata(arr) {
 
     //function to delete item
     deletebtn.addEventListener("click", function () {
-      deleteItem(items._id);
+      deleteItem(items.id);
     });
 
     //creating edit button with className
@@ -59,9 +59,9 @@ function showdata(arr) {
 
 //saving data in crudcrud
 function saveDetails(event) {
-  // Prevent the form from submitting and reloading the page
-  event.preventDefault();
-  if (submitButton.value == "submit") {
+  event.preventDefault()
+  if (submitButton.value == "Submit") {
+    console.log('working')
     var username = document.getElementById("name").value;
     var useremail = document.getElementById("email").value;
     var phone = document.getElementById("phone").value;
@@ -72,13 +72,13 @@ function saveDetails(event) {
     };
     axios
       .post(
-        "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails",
+        "http://localhost:3002/addUser",
         my_obj
       )
       .then(() => {
         axios
           .get(
-            "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails"
+            "http://localhost:3002/getUsers"
           )
           .then((data) => {
             showdata(data.data);
@@ -90,14 +90,15 @@ function saveDetails(event) {
 
 //delete function
 function deleteItem(id) {
+  console.log(id)
   axios
     .delete(
-      `https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails/${id}`
+      `http://localhost:3002/deleteUser/${id}`
     )
     .then(() => {
       return axios
         .get(
-          "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails"
+          "http://localhost:3002/getUsers"
         )
         .then((data) => {
           showdata(data.data);
@@ -118,10 +119,9 @@ function editItem(obj) {
 
   var saveButton = document.getElementById("save");
   saveButton.addEventListener("click", () => {
-    console.log("working");
     axios
       .put(
-        `https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails/${obj._id}`,
+        `http://localhost:3002/updateUser/${obj.id}`,
         {
           name: document.getElementById("name").value,
           phone: document.getElementById("phone").value,
@@ -131,7 +131,7 @@ function editItem(obj) {
       .then(() => {
         return axios
           .get(
-            "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails"
+            "http://localhost:3002/getUsers"
           )
           .then((data) => {
             document.getElementById("name").value = "";
@@ -152,7 +152,7 @@ function editItem(obj) {
 window.addEventListener("DOMContentLoaded", () => {
   axios
     .get(
-      "https://crudcrud.com/api/947dfc6eb2ac45d38d6ae3bd9d01b45c/userDetails"
+      "http://localhost:3002/getUsers"
     )
     .then((data) => {
       showdata(data.data);

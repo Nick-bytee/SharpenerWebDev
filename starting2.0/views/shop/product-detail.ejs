@@ -6,7 +6,9 @@
         <main class="pDetail">
             <h1><%- product.title %></h1>
             <hr>
-            <img src="<%- product.imageUrl %>" alt="<%- product.title %>">
+            <div class="image">
+                <img src="<%- product.imageUrl %>" alt="<%- product.title %>">
+            </div>
             <h2><%- product.description %></h2>
             <%- include('../includes/cart.ejs') %>
             
