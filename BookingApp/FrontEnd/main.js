@@ -30,9 +30,10 @@ function showdata(arr) {
     deletebtn.className = "btn delete";
 
     //function to delete item
-    deletebtn.addEventListener("click", function () {
-      deleteItem(items.id);
-    });
+    deletebtn.addEventListener("click", function(itemID) {
+      return function deleteItem(){
+        (itemID)}
+    }(items.id));
 
     //creating edit button with className
     var editbtn = document.createElement("button");
