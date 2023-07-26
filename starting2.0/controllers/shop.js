@@ -1,13 +1,14 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart')
+const CartItem = require('../models/cart-item')
 
 exports.getProducts = (req, res, next) => {
   Product.findAll()
     .then((product) => {
       res.render('shop/product-list', {
-        prods: product,
         pageTitle: 'All Products',
-        path: '/products'
+        path: '/products',
+        products: product,
       });
     })
     .catch(err => {
@@ -40,19 +41,61 @@ exports.getIndex = (req, res, next) => {
     })
 };
 
+exports.deleteCartItem = (req, res, next) => {
+  const prodID = req.params.prodID
+  CartItem.destroy({where : {
+    productId : prodID
+  }}).then(() => {
+    res.redirect('/cart')
+  }).catch(err => console.log(err))
+}
+
 exports.getCart = (req, res, next) => {
-  res.render('shop/cart', {
-    path: '/cart',
-    pageTitle: 'Your Cart'
-  });
+  req.user.getCart().then(cart => {
+    return cart.getProducts()
+  }).then(products => {
+    res.render('shop/cart', {
+      path: '/cart',
+      pageTitle: 'Your Cart',
+      products: products
+    });
+  }).catch(err => console.log(err))
 };
+
 
 exports.postCart = (req, res, next) => {
   const prodID = req.body.productID
-  Product.findProduct(prodID, (product) => {
-    Cart.addProdduct(prodID, product.price)
-  })
-  res.redirect('/')
+  let fetchedCart;
+  let newQuantity = 1
+  req.user.
+  getCart().then(cart => {
+    fetchedCart = cart
+    console.log(fetchedCart)
+    return cart.getProducts({
+      where: {
+        id: prodID
+      }
+    })
+  }).then(products => {
+    let product;
+    if(products.length > 0){
+      product = products[0]
+    }
+    if (product) {
+      CartItem.findAll({where : {productId : prodID}}).then(item => {
+        fetchedCart.addProduct(product, {through: {quantity : item[0].quantity + 1}})
+      }
+      ).catch(err => console.log(err))
+    } else {
+      return Product.findByPk(prodID).
+    then(product => {
+      return fetchedCart.addProduct(product, {
+        through: { quantity: newQuantity} 
+      })
+    }).catch(err => console.log(err))}
+  }).then(() => {
+    res.redirect('./')
+  }).catch(err => console.log(err))
 }
 
 exports.getOrders = (req, res, next) => {
