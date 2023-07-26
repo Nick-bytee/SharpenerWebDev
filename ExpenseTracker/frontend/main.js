@@ -1,5 +1,4 @@
 let form = document.getElementById('addForm')
-const arr = JSON.parse(localStorage.getItem("data")) || [];
 var table = document.getElementById('table')
 document.addEventListener('submit', additem)
 

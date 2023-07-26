@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^3.5.2",
+    "nodemon": "^3.0.1",
+    "path": "^0.12.7",
+    "router": "^1.3.8",
+    "sequelize": "^6.32.1"
+  },
+  "name": "waiterapp",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "Nick",
+  "license": "ISC",
+  "description": ""
+}
