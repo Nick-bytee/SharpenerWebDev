@@ -1,5 +1,5 @@
 const express = require('express')
-const sequilize = require('./database/database')
+const sequelize = require('./database/database')
 
 const app = express()
 const cors = require('cors')
@@ -7,11 +7,13 @@ const cors = require('cors')
 app.use(express.json())
 app.use(cors())
 
-const mainRoute = require('./routes/main')
+const mainRoute = require('./routes/routes')
+const userRoute = require('./routes/users')
 
+app.use('/users', userRoute)
 app.use('/', mainRoute)
 
-sequilize.sync().then(
+sequelize.sync().then(
     app.listen(3000)
 ).catch(err => console.log(err))
 

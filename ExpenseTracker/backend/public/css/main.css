@@ -13,6 +13,10 @@ body {
     margin: 3rem;
 }
 
+#errMessage {
+    color : red
+}
+
 .signin{
     color: white;
 }
