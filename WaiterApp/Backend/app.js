@@ -4,7 +4,7 @@ const app = express()
 const bodyParser = require('body-parser');
 
 const sequilize = require('./utils/databse')
-const mainRoute = require('./routes/routes')
+const mainRoute = require('./routes/orders')
 
 app.use(Cors())
 

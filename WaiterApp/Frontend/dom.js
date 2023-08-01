@@ -17,15 +17,14 @@ async function addOrder(e) {
         item: item
     }
     try {
-        await axios.post('http://localhost:4000/addOrder', myObj)
+        await axios.post('http://localhost:4000/orders/addOrder', myObj)
 
-        const data = await axios.get('http://localhost:4000/getOrders')
+        const data = await axios.get('http://localhost:4000/orders/getOrders')
         showOrders(data.data)
 
     } catch (err) {
         console.log(err)
     }
-
 }
 
 function showOrders(parsedData) {
@@ -91,9 +90,9 @@ function showOrders(parsedData) {
 
 async function deleteOrder(id) {
     try {
-        await axios.delete(`http://localhost:4000/delete-order/${id}`)
+        await axios.delete(`http://localhost:4000/orders/delete-order/${id}`)
 
-        const data = await (axios.get('http://localhost:4000/getOrders'))
+        const data = await (axios.get('http://localhost:4000/orders/getOrders'))
         showOrders(data.data)
 
     } catch (err) {
@@ -103,7 +102,7 @@ async function deleteOrder(id) {
 
 async function getData() {
     try {
-        const data = await axios.get('http://localhost:4000/getOrders')
+        const data = await axios.get('http://localhost:4000/orders/getOrders')
         showOrders(data)
 
     } catch (err) {
@@ -115,7 +114,7 @@ async function getData() {
 window.addEventListener("DOMContentLoaded", () => {
     axios
         .get(
-            "http://localhost:4000/getOrders"
+            "http://localhost:4000/orders/getOrders"
         )
         .then((data) => {
             showOrders(data.data);
