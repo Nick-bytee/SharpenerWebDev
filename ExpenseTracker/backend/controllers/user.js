@@ -34,7 +34,7 @@ exports.signInUser = (req, res ,next) => {
             }
 
         }else {
-            res.status(200).json({message : 'Incorrect Email'})
+            res.status(200).json({message : 'User Not Found'})
         }
     }).catch(err => console.log(err))
 }
