@@ -1,15 +1,15 @@
 const signUp = document.getElementById('signUp')
-document.addEventListener('submit',addUser)
+document.addEventListener('submit', addUser)
 
 
 const signIn = document.getElementById('signIn')
 signIn.addEventListener('click', loginPage)
 
 
-async function addUser(e){
+async function addUser(e) {
     e.preventDefault()
 
-    if(signUp.innerHTML === "Sign In"){
+    if (signUp.innerHTML === "Sign In") {
         return validateUser()
     }
 
@@ -18,23 +18,35 @@ async function addUser(e){
     const password = document.getElementById('password').value
 
     const myObj = {
-        name : name,
-        email : email,
-        password : password
+        name: name,
+        email: email,
+        password: password
     }
 
     try {
-        const data = await axios.post('http://localhost:3000/users/Adduser',myObj)
-        console.log(data)
-    }catch(err) {if(err.response && err.response.status === 400){
-        document.getElementById('Message').innerHTML = err.data.message    }}
+        const result = await axios.post('http://localhost:3000/users/Adduser', myObj)
+        const message = document.getElementById('Message')
+        message.innerHTML = result.data.message
+        message.style.color = 'green'
+        setTimeout(() => {
+            loginPage()
+        }, 1500);
+    } catch (err) {
+        if (err.response && err.response.status === 400) {
+            document.getElementById('Message').innerHTML = err.data.message
+        }
+    }
 
 }
 
 
 
 //function to show signIn/SignUp Page
-function loginPage(){
+function loginPage() {
+    document.getElementById('Message').innerHTML = ''
+    document.getElementById('email').value = ''
+    document.getElementById('password').value = ''
+    document.getElementById('emailHelp').innerHTML = ''
 
     //changing heading
     const heading = document.getElementById('heading')
@@ -44,7 +56,7 @@ function loginPage(){
     signIn.innerHTML = 'Create New Account';
     signIn.addEventListener('click', function () {
         window.location.href = '../views/signUp.html';
-      });
+    });
 
     //changing Image
     const image = document.getElementById('image')
@@ -59,28 +71,29 @@ function loginPage(){
 
     //removing name field
     const name = document.getElementById('name')
-    if(name) {
+    if (name) {
         const parent = name.parentElement
         parent.removeChild(name)
     }
 }
 
-function validateUser() {
+async function validateUser() {
     const email = document.getElementById('email').value
-        const password = document.getElementById('password').value
+    const password = document.getElementById('password').value
 
-        const validate = {
-            email : email,
-            password : password
-        }
-
-        axios.post('http://localhost:3000/users/signIn', validate).then(result => {
-            const message = document.getElementById('Message')
-            message.innerHTML = result.data.message
-            message.style.color = 'green'
-        }
-        ).catch(err => {
-            console.log(err)
-        })
+    const validate = {
+        email: email,
+        password: password
+    }
+    try {
+        const result = await axios.post('http://localhost:3000/users/signIn', validate)
+        const message = document.getElementById('Message')
+        message.innerHTML = result.data.message
+        message.style.color = 'green'
+    }
+    
+    catch(err){
+        console.log(err)
+    }
 
 }

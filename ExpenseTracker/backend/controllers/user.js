@@ -1,40 +1,49 @@
-const sequelize = require('../database/database');
 const User = require('../models/user');
+const bcrypt = require('bcrypt')
 
-exports.addUser = (req, res, next) => {
-    User.create({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-    }).then(result => {
-        res.status(200).json(result)
-    }).catch(err => {
+exports.addUser = (req, res) => {
+    bcrypt.hash(req.body.password,10, async(err, hash) => {
         console.log(err)
-        res.status(400).json({message : 'User Already Registered'})
+        await User.create({
+            name: req.body.name,
+            email: req.body.email,
+            password: hash
+        }).then(
+            res.status(200).json({message : 'Registered Successfully, Redirecting to Login...'})
+        ).catch(err => {
+            console.log(err)
+            res.status(400).json({message : 'Email Already Registered'})
+        }) 
     })
 }
 
-exports.signInUser = (req, res ,next) => {
+exports.signInUser = async (req, res) => {
     const email = req.body.email;
     const psk = req.body.password
-
-    User.findAll({
-        where : {
-            email : email,
-        }
-    }).then(user => {
-        if(user.length > 0) {
-            {   
-                const data = user[0]
-                if(data['password'] === psk){
-                    res.status(200).json({message : 'Logged In Successfully'})
-                }else {
-                    res.status(200).json({message : 'Incorrect Password'})
-                }
+    try {
+        const user = await User.findAll({
+            where : {
+                email : email,
             }
-
-        }else {
-            res.status(200).json({message : 'User Not Found'})
-        }
-    }).catch(err => console.log(err))
+        })
+            if(user.length > 0) {
+                {   
+                    const data = user[0]
+                    bcrypt.compare(psk, data['password'], (err, result) => {
+                        if(err) {
+                            throw new Error('Something Went Wrong')
+                        }else if(result){
+                            res.status(200).json({message : 'Logged In Successfully'})
+                        }else{
+                            res.status(200).json({message : 'Incorrect Password'})
+                        }
+                    })
+                }
+            }else {
+                res.status(200).json({message : 'User Not Found'})
+            }
+    }
+    catch(err) {
+        res.status(500).json({message : err})
+    } 
 }
