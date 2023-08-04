@@ -1,10 +1,13 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt')
 
+const jwt = require('jsonwebtoken')
+
 exports.addUser = (req, res) => {
     bcrypt.hash(req.body.password,10, async(err, hash) => {
         console.log(err)
-        await User.create({
+        console.log(req.body.name)
+        User.create({
             name: req.body.name,
             email: req.body.email,
             password: hash
@@ -15,6 +18,10 @@ exports.addUser = (req, res) => {
             res.status(400).json({message : 'Email Already Registered'})
         }) 
     })
+}
+
+function generateAccessToken(id, name) {
+    return jwt.sign({userID : id, name : name},'secretkey')
 }
 
 exports.signInUser = async (req, res) => {
@@ -29,11 +36,12 @@ exports.signInUser = async (req, res) => {
             if(user.length > 0) {
                 {   
                     const data = user[0]
-                    bcrypt.compare(psk, data['password'], (err, result) => {
+                    bcrypt.compare(psk, data.password, (err, result) => {
                         if(err) {
                             throw new Error('Something Went Wrong')
                         }else if(result){
-                            res.status(200).json({message : 'Logged In Successfully',success : true})
+                            const token = generateAccessToken(data.id,data.name)
+                            res.status(200).json({message : 'Logged In Successfully',success : true, token : token})
                         }else{
                             console.log('working 2')
                             res.status(200).json({message : 'Incorrect Password', success : false})

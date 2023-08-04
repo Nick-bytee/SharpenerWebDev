@@ -17,6 +17,7 @@ async function addUser(e) {
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
 
+    console.log(name)
     const myObj = {
         name: name,
         email: email,
@@ -91,8 +92,9 @@ async function validateUser() {
             const message = document.getElementById('Message')
             message.innerHTML = result.data.message
             message.style.color = 'green'
+            localStorage.setItem('token', result.data.token)
             setTimeout(() => {
-                window.location.href = "C:/Users/nikhi/Desktop/SharpenerWebDev/ExpenseTracker/backend/views/index.html"
+                window.location.href = "./index.html"
             }, 1000)
         }
     }
