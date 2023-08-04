@@ -1,0 +1,67 @@
+#icon {
+    height: auto;
+    max-width: 5%;
+}
+
+#addForm{
+    display: flex;
+}
+
+.col-auto{
+    border-radius: 0px 10px 0 0;
+}
+
+.nav-link{
+    margin-bottom: 10px;
+}
+
+.vertical-menu {
+    background-color: white;
+    width: 30%;
+}
+
+.vertical-menu a {
+    background-color: #eee;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+.heading {
+    color: black;
+    font-family: bd-supper, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    position: relative;
+    top: 5px;
+}
+
+@media screen and (max-width: 600px) {
+    #icon {
+        max-width: 15%;
+    }
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+#body {
+    background-color: ghostwhite;
+}
+
+.form-wrapper{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}

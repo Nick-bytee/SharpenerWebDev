@@ -87,9 +87,14 @@ async function validateUser() {
     }
     try {
         const result = await axios.post('http://localhost:3000/users/signIn', validate)
-        const message = document.getElementById('Message')
-        message.innerHTML = result.data.message
-        message.style.color = 'green'
+        if(result.data.success){
+            const message = document.getElementById('Message')
+            message.innerHTML = result.data.message
+            message.style.color = 'green'
+            setTimeout(() => {
+                window.location.href = "C:/Users/nikhi/Desktop/SharpenerWebDev/ExpenseTracker/backend/views/index.html"
+            }, 1000)
+        }
     }
     
     catch(err){

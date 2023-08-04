@@ -29,9 +29,9 @@ function createli(parsedData) {
         var td3 = document.createElement('td')
 
 
-        td.appendChild(document.createTextNode(item.description))
-        td2.appendChild(document.createTextNode(item.amount))
-        td3.appendChild(document.createTextNode(item.category))
+        td.appendChild(document.createTextNode(item.category))
+        td2.appendChild(document.createTextNode(item.description))
+        td3.appendChild(document.createTextNode(item.amount))
 
         tr.appendChild(td)
         tr.appendChild(td2)
@@ -39,8 +39,9 @@ function createli(parsedData) {
 
         //creating delelte button with className
         var deletebtn = document.createElement('button')
-        var icon = document.createElement('img')
-        icon.src = "delete.png"
+        var icon = document.createElement('i')
+        icon.className = "fa-solid fa-trash"
+        icon.style.color = "#000000"
         icon.style.height = '24px'
         icon.style.width = '24px'
         deletebtn.appendChild(icon)
@@ -56,8 +57,8 @@ function createli(parsedData) {
         //creating edit button with className
         var editbtn = document.createElement('button')
         editbtn.className = "btn"
-        var icon2 = document.createElement('img')
-        icon2.src = "edit.png"
+        var icon2 = document.createElement('i')
+        icon2.className = "fa-regular fa-pen-to-square"
         icon2.style.height = '24px'
         icon2.style.width = '24px'
         editbtn.appendChild(icon2)

@@ -33,17 +33,18 @@ exports.signInUser = async (req, res) => {
                         if(err) {
                             throw new Error('Something Went Wrong')
                         }else if(result){
-                            res.status(200).json({message : 'Logged In Successfully'})
+                            res.status(200).json({message : 'Logged In Successfully',success : true})
                         }else{
-                            res.status(200).json({message : 'Incorrect Password'})
+                            console.log('working 2')
+                            res.status(200).json({message : 'Incorrect Password', success : false})
                         }
                     })
                 }
             }else {
-                res.status(200).json({message : 'User Not Found'})
+                res.status(200).json({message : 'User Not Found', success : false})
             }
     }
     catch(err) {
-        res.status(500).json({message : err})
+        res.status(500).json({message : err, success : false})
     } 
 }
