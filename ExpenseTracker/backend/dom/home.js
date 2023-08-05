@@ -81,6 +81,73 @@ function createli(parsedData) {
     } 
 };
 
+// document.getElementById('rzp-button').onclick = async function(e) {
+//     const token = localStorage.getItem('token')
+//     const response = await axios.get('http://localhost:3000/purchase/purchaseMembership', {headers : {'Auth' : token}})
+
+//     var options =  {
+//         "key" : response.data.key_id,
+//         "order_id" : response.data.order.id,
+
+//         "hander" : async function (response) {
+//             await axios.post('http://localhost:3000/puchase/updateTranactionStatus', {
+//                 order_id : options.order_id,
+//                 paymentId : response.razorpay.razorpay_payment_id 
+//             }, {headers : {'Auth' : token}})
+//         }
+//     }
+
+//     const rzp1 = new Razorpay(options)
+//     rzp1.open()
+//     e.preventDefault()
+
+//     rzp1.on('payment.failed', function(response){
+//         console.log(response)
+//         alert('Something Went Wrong')
+//     })
+// };
+
+document.getElementById('rzp-button').onclick = async function(e) {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.get('http://localhost:3000/purchase/purchaseMembership', {
+            headers: {
+                'Auth': token
+            }
+        });
+ 
+        var options =  {
+            "key" : response.data.key_id,
+            "order_id" : response.data.order.id,
+    
+            "handler" : async function (response) {
+                try {
+                    await axios.post('http://localhost:3000/purchase/updateTransactionStatus', {
+                        order_id : options.order_id,
+                        paymentId : response.razorpay_payment_id
+                    }, {
+                        headers: {
+                            'Auth': token
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+    
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
+    
+        rzp1.on('payment.failed', function(response){
+            console.log(response);
+            alert('Something Went Wrong');
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 
 async function additem(a) {
