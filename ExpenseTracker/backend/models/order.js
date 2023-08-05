@@ -11,7 +11,6 @@ const Order = sequelize.define('order', {
     paymentId : Sequelize.STRING,
     orderId : Sequelize.STRING,
     status : Sequelize.STRING,
-    isPremium : Sequelize.BOOLEAN    
 
 })
 

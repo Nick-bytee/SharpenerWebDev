@@ -20,6 +20,10 @@
     width: 30%;
 }
 
+#rzp-button {
+    display: contents;
+}
+
 .vertical-menu a {
     background-color: #eee;
     color: black;

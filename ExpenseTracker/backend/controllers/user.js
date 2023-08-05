@@ -40,7 +40,7 @@ exports.signInUser = async (req, res) => {
                         if(err) {
                             throw new Error('Something Went Wrong')
                         }else if(result){
-                            const token = generateAccessToken(data.id,data.name)
+                            const token = generateAccessToken(data.id,data.name,data.isPremium)
                             res.status(200).json({message : 'Logged In Successfully',success : true, token : token})
                         }else{
                             console.log('working 2')

@@ -19,7 +19,11 @@ exports.getData = async (req, res) => {
         const expenses = await Expense.findAll({where : {
             userId : user.id
         }})
-        res.status(200).json(expenses)
+        if(user.isPremium){
+            res.status(200).json({expenses, isPremium : true})
+        }else{
+            res.status(200).json({expenses, isPremium : false})
+        }
     }catch(err) {
         console.log(err)
     }

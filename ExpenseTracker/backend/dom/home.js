@@ -6,108 +6,84 @@ var editID;
 var token = localStorage.getItem('token')
 
 function createli(parsedData) {
-    if(document.getElementById('formdata').value === "Save"){
+    if (document.getElementById('formdata').value === "Save") {
         return saveUpdatedItem()
-    }else{
+    } else {
         table.innerHTML = "";
-    for (let i = 0; i < parsedData.length; i++) {
-        var item = parsedData[i]
+        for (let i = 0; i < parsedData.length; i++) {
+            var item = parsedData[i]
 
-        //creating a li element
-        var li = document.createElement('li')
-        li.className = "list-group-item d-flex"
+            //creating a li element
+            var li = document.createElement('li')
+            li.className = "list-group-item d-flex"
 
-        //creating table element
-        var tr = document.createElement('tr')
-        var th = document.createElement('th');
-        th.scope = "row"
-        th.innerText = (i + 1)
-        tr.appendChild(th)
-
-
-        //creating td elements
-        var td = document.createElement('td')
-        var td2 = document.createElement('td')
-        var td3 = document.createElement('td')
+            //creating table element
+            var tr = document.createElement('tr')
+            var th = document.createElement('th');
+            th.scope = "row"
+            th.innerText = (i + 1)
+            tr.appendChild(th)
 
 
-        td.appendChild(document.createTextNode(item.category))
-        td2.appendChild(document.createTextNode(item.description))
-        td3.appendChild(document.createTextNode(item.amount))
+            //creating td elements
+            var td = document.createElement('td')
+            var td2 = document.createElement('td')
+            var td3 = document.createElement('td')
 
-        tr.appendChild(td)
-        tr.appendChild(td2)
-        tr.appendChild(td3)
 
-        //creating delelte button with className
-        var deletebtn = document.createElement('button')
-        var icon = document.createElement('i')
-        icon.className = "fa-solid fa-trash"
-        icon.style.color = "#000000"
-        icon.style.height = '24px'
-        icon.style.width = '24px'
-        deletebtn.appendChild(icon)
-        deletebtn.className = "btn delete"
+            td.appendChild(document.createTextNode(item.category))
+            td2.appendChild(document.createTextNode(item.description))
+            td3.appendChild(document.createTextNode(item.amount))
 
-        //function to delete item
-        deletebtn.addEventListener('click', function (itemID) {
-            return function () {
-                deleteItem(itemID)
-            }
-        }(item.id));
+            tr.appendChild(td)
+            tr.appendChild(td2)
+            tr.appendChild(td3)
 
-        //creating edit button with className
-        var editbtn = document.createElement('button')
-        editbtn.className = "btn"
-        var icon2 = document.createElement('i')
-        icon2.className = "fa-regular fa-pen-to-square"
-        icon2.style.height = '24px'
-        icon2.style.width = '24px'
-        editbtn.appendChild(icon2)
+            //creating delelte button with className
+            var deletebtn = document.createElement('button')
+            var icon = document.createElement('i')
+            icon.className = "fa-solid fa-trash"
+            icon.style.color = "#000000"
+            icon.style.height = '24px'
+            icon.style.width = '24px'
+            deletebtn.appendChild(icon)
+            deletebtn.className = "btn delete"
 
-        //edit button eventlistener
-        editbtn.addEventListener('click', function (Item) {
-            return function() {editItem(Item)}
-        }(item))
+            //function to delete item
+            deletebtn.addEventListener('click', function (itemID) {
+                return function () {
+                    deleteItem(itemID)
+                }
+            }(item.id));
 
-        //adding buttons to li element
-        tr.appendChild(deletebtn)
-        tr.appendChild(editbtn)
+            //creating edit button with className
+            var editbtn = document.createElement('button')
+            editbtn.className = "btn"
+            var icon2 = document.createElement('i')
+            icon2.className = "fa-regular fa-pen-to-square"
+            icon2.style.height = '24px'
+            icon2.style.width = '24px'
+            editbtn.appendChild(icon2)
 
-        //adding li to main list
-        // items.appendChild(li)
-        table.append(tr)
-    };
-    } 
+            //edit button eventlistener
+            editbtn.addEventListener('click', function (Item) {
+                return function () {
+                    editItem(Item)
+                }
+            }(item))
+
+            //adding buttons to li element
+            tr.appendChild(deletebtn)
+            tr.appendChild(editbtn)
+
+            //adding li to main list
+            // items.appendChild(li)
+            table.append(tr)
+        };
+    }
 };
 
-// document.getElementById('rzp-button').onclick = async function(e) {
-//     const token = localStorage.getItem('token')
-//     const response = await axios.get('http://localhost:3000/purchase/purchaseMembership', {headers : {'Auth' : token}})
-
-//     var options =  {
-//         "key" : response.data.key_id,
-//         "order_id" : response.data.order.id,
-
-//         "hander" : async function (response) {
-//             await axios.post('http://localhost:3000/puchase/updateTranactionStatus', {
-//                 order_id : options.order_id,
-//                 paymentId : response.razorpay.razorpay_payment_id 
-//             }, {headers : {'Auth' : token}})
-//         }
-//     }
-
-//     const rzp1 = new Razorpay(options)
-//     rzp1.open()
-//     e.preventDefault()
-
-//     rzp1.on('payment.failed', function(response){
-//         console.log(response)
-//         alert('Something Went Wrong')
-//     })
-// };
-
-document.getElementById('rzp-button').onclick = async function(e) {
+document.getElementById('rzp-button').onclick = async function (e) {
     const token = localStorage.getItem('token');
     try {
         const response = await axios.get('http://localhost:3000/purchase/purchaseMembership', {
@@ -115,16 +91,16 @@ document.getElementById('rzp-button').onclick = async function(e) {
                 'Auth': token
             }
         });
- 
-        var options =  {
-            "key" : response.data.key_id,
-            "order_id" : response.data.order.id,
-    
-            "handler" : async function (response) {
+
+        var options = {
+            "key": response.data.key_id,
+            "order_id": response.data.order.id,
+            "handler": async function (response) {
                 try {
                     await axios.post('http://localhost:3000/purchase/updateTransactionStatus', {
-                        order_id : options.order_id,
-                        paymentId : response.razorpay_payment_id
+                        order_id: options.order_id,
+                        paymentId: response.razorpay_payment_id,
+                        status: true
                     }, {
                         headers: {
                             'Auth': token
@@ -135,14 +111,26 @@ document.getElementById('rzp-button').onclick = async function(e) {
                 }
             }
         }
-    
+
         const rzp1 = new Razorpay(options);
         rzp1.open();
         e.preventDefault();
-    
-        rzp1.on('payment.failed', function(response){
-            console.log(response);
-            alert('Something Went Wrong');
+
+        rzp1.on('payment.failed', async function (response) {
+            try {
+                axios.post('http://localhost:3000/purchase/updateTransactionStatus', {
+                    order_id: response.error.metadata.order_id,
+                    paymentId: response.error.metadata.payment_id,
+                    status: false
+                }, {
+                    headers: {
+                        'Auth': token
+                    }
+                })
+                alert(response.error.description);
+            } catch (err) {
+                console.log(err)
+            }
         });
     } catch (error) {
         console.log(error);
@@ -153,37 +141,41 @@ document.getElementById('rzp-button').onclick = async function(e) {
 async function additem(a) {
     a.preventDefault()
 
-    if(document.getElementById('formdata').value === 'Save'){
-       return saveUpdatedItem()
-    }else {
+    if (document.getElementById('formdata').value === 'Save') {
+        return saveUpdatedItem()
+    } else {
         //getting items to add
-    console.log('hh')
-    var amount = document.getElementById('amount').value + ' ';
-    var description = document.getElementById('desc').value + ' ';
-    var category = document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent;
+        console.log('hh')
+        var amount = document.getElementById('amount').value + ' ';
+        var description = document.getElementById('desc').value + ' ';
+        var category = document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent;
 
-    //adding items to local storage
-    let my_obj = {
-        amnt: amount,
-        desc: description,
-        cate: category,
-        token : token
-    };
-    try {
-        await axios.post('http://localhost:3000/addExpense',
-            my_obj)
+        //adding items to local storage
+        let my_obj = {
+            amnt: amount,
+            desc: description,
+            cate: category,
+            token: token
+        };
+        try {
+            await axios.post('http://localhost:3000/addExpense',
+                my_obj)
 
-        const data = await axios.get(`http://localhost:3000/getExpenses`, {headers : {'Auth' : token}})
-        createli(data.data)
-    } catch (err) {
-        console.log(err)
-    }          
+            const data = await axios.get(`http://localhost:3000/getExpenses`, {
+                headers: {
+                    'Auth': token
+                }
+            })
+            createli(data.data)
+        } catch (err) {
+            console.log(err)
+        }
 
 
-    //resetting form fields
-    document.getElementById('amount').value = '';
-    document.getElementById('desc').value = '';
-    document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent = 'Choose a Category';
+        //resetting form fields
+        document.getElementById('amount').value = '';
+        document.getElementById('desc').value = '';
+        document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent = 'Choose a Category';
     }
 }
 
@@ -192,7 +184,11 @@ async function deleteItem(id) {
         try {
             await axios.delete(`http://localhost:3000/deleteExpense/${id}`)
 
-            const data = await axios.get(`http://localhost:3000/getExpenses`, {headers : {'Auth' : token}})
+            const data = await axios.get(`http://localhost:3000/getExpenses`, {
+                headers: {
+                    'Auth': token
+                }
+            })
             createli(data.data)
         } catch (err) {
             console.log(err);
@@ -201,22 +197,26 @@ async function deleteItem(id) {
 }
 
 
-async function saveUpdatedItem(){
+async function saveUpdatedItem() {
     let obj = {
-        id : editID,
-        amount : document.getElementById('amount').value,
-        description : document.getElementById('desc').value,
-        category : document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent
+        id: editID,
+        amount: document.getElementById('amount').value,
+        description: document.getElementById('desc').value,
+        category: document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent
     }
     const form = document.getElementById('addForm')
     form.children.innerHTML = ''
     try {
         await axios.put(`http://localhost:3000/updateExpense/${editID}`,
-        obj)
+            obj)
 
         document.getElementById('formdata').value = "Add Expense"
 
-        const data = await axios.get(`http://localhost:3000/getExpenses`, {headers : {'Auth' : token}})
+        const data = await axios.get(`http://localhost:3000/getExpenses`, {
+            headers: {
+                'Auth': token
+            }
+        })
         createli(data.data)
     } catch (err) {
         console.log(err)
@@ -235,10 +235,18 @@ function editItem(item) {
 window.addEventListener("DOMContentLoaded", () => {
     axios
         .get(
-            "http://localhost:3000/getExpenses", {headers : {'Auth' : token}}
+            "http://localhost:3000/getExpenses", {
+                headers: {
+                    'Auth': token
+                }
+            }
         )
         .then((data) => {
-            createli(data.data);
+            if (data.data.isPremium) {
+                document.getElementById('rzp-button').style.display = 'none'
+            } else {
+                createli(data.data);
+            }
         })
         .catch((err) => console.log(err));
 });
