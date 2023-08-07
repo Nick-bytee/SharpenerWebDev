@@ -56,25 +56,25 @@ function createli(parsedData) {
                 }
             }(item.id));
 
-            //creating edit button with className
-            var editbtn = document.createElement('button')
-            editbtn.className = "btn"
-            var icon2 = document.createElement('i')
-            icon2.className = "fa-regular fa-pen-to-square"
-            icon2.style.height = '24px'
-            icon2.style.width = '24px'
-            editbtn.appendChild(icon2)
+            // //creating edit button with className
+            // var editbtn = document.createElement('button')
+            // editbtn.className = "btn"
+            // var icon2 = document.createElement('i')
+            // icon2.className = "fa-regular fa-pen-to-square"
+            // icon2.style.height = '24px'
+            // icon2.style.width = '24px'
+            // editbtn.appendChild(icon2)
 
-            //edit button eventlistener
-            editbtn.addEventListener('click', function (Item) {
-                return function () {
-                    editItem(Item)
-                }
-            }(item))
+            // //edit button eventlistener
+            // editbtn.addEventListener('click', function (Item) {
+            //     return function () {
+            //         editItem(Item)
+            //     }
+            // }(item))
 
             //adding buttons to li element
             tr.appendChild(deletebtn)
-            tr.appendChild(editbtn)
+            // tr.appendChild(editbtn)
 
             //adding li to main list
             // items.appendChild(li)
@@ -147,7 +147,6 @@ async function additem(a) {
         return saveUpdatedItem()
     } else {
         //getting items to add
-        console.log('hh')
         var amount = document.getElementById('amount').value + ' ';
         var description = document.getElementById('desc').value + ' ';
         var category = document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent;
@@ -186,7 +185,11 @@ async function deleteItem(id) {
     const token = localStorage.getItem('token')
     if (confirm('Are You Sure You want to delete this item?')) {
         try {
-            await axios.delete(`http://localhost:3000/deleteExpense/${id}`, {headers : {'Auth' : token}})
+            await axios.delete(`http://localhost:3000/deleteExpense/${id}`, {
+                headers: {
+                    'Auth': token
+                }
+            })
 
             const data = await axios.get(`http://localhost:3000/getExpenses`, {
                 headers: {
@@ -230,13 +233,13 @@ async function saveUpdatedItem() {
 }
 
 
-function editItem(item) {
-    document.getElementById('amount').value = item.amount;
-    document.getElementById('desc').value = item.description;
-    document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent = item.category;
-    document.getElementById('formdata').value = 'Save'
-    editID = item.id
-}
+// function editItem(item) {
+//     document.getElementById('amount').value = item.amount;
+//     document.getElementById('desc').value = item.description;
+//     document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent = item.category;
+//     document.getElementById('formdata').value = 'Save'
+//     editID = item.id
+// }
 
 function checkPremium(isPremium) {
     if (isPremium) {
@@ -247,7 +250,7 @@ function checkPremium(isPremium) {
     }
 }
 
-function showleaderboard(){
+function showleaderboard() {
     const leaderboardButton = document.getElementById('leaderboard-toggle')
     leaderboardButton.style.display = 'flex'
 }
@@ -275,28 +278,38 @@ const showLeaderboardButton = document.getElementById('show-leaderboard')
 showLeaderboardButton.addEventListener('click', leaderBoardFunction)
 
 async function leaderBoardFunction(e) {
-    const image = document.getElementById('image')
-    if(image.name === 'hidden'){
-        return showLeaderBoardIcon(image)
-    }
-    image.name = "hidden"
-    image.className = "fa-solid fa-eye-slash fa-lg"
-    document.getElementById('leaderboard').style.display = 'flex'
-    const token = document.getElementById('token')
+    //check for premium user
     try {
-        const result = await axios.get('http://localhost:3000/leaderboard', {
-            headers: {
-                'Auth': token
+        const data = await axios.get(
+            "http://localhost:3000/getExpenses", {
+                headers: {
+                    'Auth': token
+                }
             }
-        })
-        createleaderBoard(result.data)
-
+        )
+        console.log(data)
+        if (data.data.isPremium) {
+            const image = document.getElementById('image')
+            if (image.name === 'hidden') {
+                return showLeaderBoardIcon(image)
+            }
+            image.name = "hidden"
+            image.className = "fa-solid fa-eye-slash fa-lg"
+            document.getElementById('leaderboard').style.display = 'flex'
+            const token = document.getElementById('token')
+            const result = await axios.get('http://localhost:3000/leaderboard', {
+                headers: {
+                    'Auth': token
+                }
+            })
+            createleaderBoard(result.data)
+        }
     } catch (err) {
         console.log(err)
     }
 }
 
-function showLeaderBoardIcon(image){
+function showLeaderBoardIcon(image) {
     image.className = "fa-solid fa-list fa-lg"
     image.name = "original"
     document.getElementById('leaderboard').style.display = 'none'

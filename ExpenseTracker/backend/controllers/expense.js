@@ -114,25 +114,25 @@ exports.deleteData = async (req, res) => {
     }
 }
 
-exports.updateExpense = async (req, res) => {
-    const id = req.params.uid
-    const t = await sequelize.transaction()
-    try {
-        Expense.update({
-            amount: req.body.amount,
-            description: req.body.description,
-            category: req.body.category
-        }, {
-            where: {
-                id: id
-            }
-        }, {
-            transaction: t
-        })
-        await t.commit()
-        res.status(200).json(data)
-    } catch (err) {
-        await t.rollback()
-        console.log(err)
-    }
-}
+// exports.updateExpense = async (req, res) => {
+//     const id = req.params.uid
+//     const t = await sequelize.transaction()
+//     try {
+//         Expense.update({
+//             amount: req.body.amount,
+//             description: req.body.description,
+//             category: req.body.category
+//         }, {
+//             where: {
+//                 id: id
+//             }
+//         }, {
+//             transaction: t
+//         })
+//         res.status(200).json(data)
+//         await t.commit()
+//     } catch (err) {
+//         await t.rollback()
+//         console.log(err)
+//     }
+// }
