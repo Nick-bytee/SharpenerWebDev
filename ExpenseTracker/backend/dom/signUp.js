@@ -51,6 +51,12 @@ function loginPage() {
     const heading = document.getElementById('heading')
     heading.innerText = 'Sign In'
 
+    //Forgot Password Button
+    const forgotPskButton = document.getElementById('forgot-psk')
+    forgotPskButton.style.display = ''
+    forgotPskButton.addEventListener('click', forgotPassword)
+
+
     //changing button text
     signIn.innerHTML = 'Create New Account';
     signIn.addEventListener('click', function () {
@@ -105,4 +111,8 @@ async function validateUser() {
         console.log(err)
     }
 
+}
+
+async function forgotPassword(e) {
+    window.location.href = './forgotPassword.html'
 }
