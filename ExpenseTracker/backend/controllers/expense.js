@@ -1,35 +1,22 @@
 const Expense = require('../models/expense')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const sequelize = require('sequelize')
 
 exports.leaderboardData = async (req, res) => {
     try {
-        const expenses = await Expense.findAll({
-            include: ({model : User, attributes : ['name']})
+        const leaderboardUsers = await User.findAll({
+            attributes : ['id','name', [sequelize.fn('sum', sequelize.col('amount')), 'amount']],
+            include : [
+                {
+                model : Expense,
+                attributes : [],
+                }
+            ],group:['user.id'],
+            order : [['amount', "DESC"]]
         })
 
-        const users = {}
-
-        expenses.forEach(expense => {
-            const userId = expense.dataValues.userId
-            const amount = expense.dataValues.amount
-            const Username = expense.dataValues.user.dataValues.name
-            console.log(expense.dataValues.userId)
-
-            if (!users[userId]) {
-                users[userId] = {
-                    id: userId,
-                    name : Username,
-                    amount: amount
-                }
-            } else {
-                users[userId].amount += amount
-            }
-        });
-        const sortedUsers = Object.values(users)
-
-        sortedUsers.sort((a,b) => b.amount - a.amount)
-        res.status(200).json(sortedUsers)
+        res.status(200).json(leaderboardUsers)
     }catch (err) {
     console.log(err)
 }}
