@@ -1,0 +1,19 @@
+Sequelize Join
+exports.leaderboardData = async (req, res) => {
+        try {
+            const leaderboardUsers = await User.findAll({
+                attributes: ['id', 'name', [sequelize.fn('sum', sequelize.col('amount')), 'amount']],
+                include: [{
+                    model: Expense,
+                    attributes: [],
+                }],
+                group: ['user.id'],
+                order: [
+                    ['amount', "DESC"]
+                ]
+            })
+            res.status(200).json(leaderboardUsers)
+        } catch (err) {
+            console.log(err)
+        }
+    }

@@ -177,7 +177,7 @@ async function additem(a) {
         //resetting form fields
         document.getElementById('amount').value = '';
         document.getElementById('desc').value = '';
-        document.getElementById('category').options[document.getElementById('category').selectedIndex].textContent = 'Choose a Category';
+        document.getElementById('category').selectedIndex = 0;
     }
 }
 
@@ -234,8 +234,8 @@ function editItem(item) {
     editID = item.id
 }
 
-function checkPremium(isPremium){
-    if(isPremium){
+function checkPremium(isPremium) {
+    if (isPremium) {
         document.getElementById('rzp-button').style.display = 'none'
         const ul = document.createElement('ul')
         ul.appendChild(document.createTextNode('Premium User'))
@@ -255,7 +255,7 @@ window.addEventListener("DOMContentLoaded", () => {
         .then((data) => {
             checkPremium(data.data.isPremium)
             createli(data.data)
-        
+
         })
         .catch((err) => console.log(err));
 });

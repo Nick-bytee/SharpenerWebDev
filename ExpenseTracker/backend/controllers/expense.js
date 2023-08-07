@@ -4,33 +4,40 @@ const User = require('../models/user')
 const sequelize = require('sequelize')
 
 exports.leaderboardData = async (req, res) => {
+    const result = await User.findAll({
+        attributes : ['name', 'totalAmount'],
+        order : [['totalAmount', "DESC"]],
+        raw : true,
+    })
+    res.status(200).json(result)
+}
+
+exports.storeData = async (req, res) => {
     try {
-        const leaderboardUsers = await User.findAll({
-            attributes : ['id','name', [sequelize.fn('sum', sequelize.col('amount')), 'amount']],
-            include : [
-                {
-                model : Expense,
-                attributes : [],
-                }
-            ],group:['user.id'],
-            order : [['amount', "DESC"]]
+        const user = jwt.verify(req.body.token, 'secretkey')
+        const amount = req.body.amnt
+        const userID = user.userID
+        const data = Expense.create({
+            amount: amount,
+            description: req.body.desc,
+            category: req.body.cate,
+            userId: userID
         })
+            const result = await User.findByPk(userID)
+            const oldExpense = result.dataValues.totalAmount
+            const totalExpense = (oldExpense + +amount)
 
-        res.status(200).json(leaderboardUsers)
-    }catch (err) {
-    console.log(err)
-}}
-
-exports.storeData = (req, res) => {
-    const user = jwt.verify(req.body.token, 'secretkey')
-    Expense.create({
-        amount: req.body.amnt,
-        description: req.body.desc,
-        category: req.body.cate,
-        userId: user.userID
-    }).then(data =>
-        res.status(200).json(data)
-    ).catch(err => console.log(err))
+            User.update({
+                totalAmount : totalExpense
+        }, {
+            where : {
+                id : userID
+            }
+        })
+            res.status(200).json(data)
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 exports.getData = async (req, res) => {

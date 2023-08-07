@@ -38,7 +38,7 @@ function createleaderBoard(data) {
 
 
         td.appendChild(document.createTextNode(item.name))
-        td2.appendChild(document.createTextNode(item.amount))
+        td2.appendChild(document.createTextNode(item.totalAmount))
 
         tr.appendChild(td)
         tr.appendChild(td2)
