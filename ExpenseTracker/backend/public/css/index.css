@@ -11,6 +11,23 @@
     border-radius: 0px 10px 0 0;
 }
 
+#leaderboard-toggle{
+    display: none;
+}
+
+.nav-leaderboard{
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    display: contents;
+}
+
+.buy-premium{
+    display: contents;
+    font-size: small;
+    cursor: pointer;
+}
+
 .nav-link{
     margin-bottom: 10px;
 }
@@ -25,13 +42,15 @@
     flex-wrap: wrap;
 }
 
+#leaderboard{
+    flex-grow: 1;
+    flex-basis: 300px;
+    display: none;
+}
+
 #items{
     flex-grow: 1;
     flex-basis: 300px;
-}
-
-#rzp-button {
-    display: contents;
 }
 
 .vertical-menu a {

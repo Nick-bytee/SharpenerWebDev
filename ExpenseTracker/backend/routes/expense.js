@@ -9,7 +9,7 @@ router.post('/addExpense', mainController.storeData)
 
 router.get('/getExpenses', authController.authenticate, mainController.getData)
 
-router.delete('/deleteExpense/:id', mainController.deleteData)
+router.delete('/deleteExpense/:id', authController.authenticate, mainController.deleteData)
 
 router.put('/updateExpense/:uid', mainController.updateExpense)
 

@@ -1,18 +1,21 @@
 const Expense = require('../models/expense')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
-const sequelize = require('sequelize')
+const sequelize = require('../database/database')
 
 exports.leaderboardData = async (req, res) => {
     const result = await User.findAll({
-        attributes : ['name', 'totalAmount'],
-        order : [['totalAmount', "DESC"]],
-        raw : true,
+        attributes: ['name', 'totalAmount'],
+        order: [
+            ['totalAmount', "DESC"]
+        ],
+        raw: true,
     })
     res.status(200).json(result)
 }
 
 exports.storeData = async (req, res) => {
+    const t = await sequelize.transaction()
     try {
         const user = jwt.verify(req.body.token, 'secretkey')
         const amount = req.body.amnt
@@ -22,20 +25,26 @@ exports.storeData = async (req, res) => {
             description: req.body.desc,
             category: req.body.cate,
             userId: userID
-        })
-            const result = await User.findByPk(userID)
-            const oldExpense = result.dataValues.totalAmount
-            const totalExpense = (oldExpense + +amount)
-
-            User.update({
-                totalAmount : totalExpense
         }, {
-            where : {
-                id : userID
-            }
+            transaction: t
         })
-            res.status(200).json(data)
+        const result = await User.findByPk(userID)
+        const oldExpense = result.dataValues.totalAmount
+        const totalExpense = (oldExpense + +amount)
+
+        User.update({
+            totalAmount: totalExpense
+        }, {
+            where: {
+                id: userID
+            }
+        }, {
+            transaction: t
+        })
+        await t.commit()
+        res.status(200).json(data)
     } catch (err) {
+        await t.rollback()
         console.log(err)
     }
 }
@@ -64,20 +73,52 @@ exports.getData = async (req, res) => {
     }
 }
 
-exports.deleteData = (req, res) => {
-    Expense.destroy({
-        where: {
-            id: req.params.id
-        }
-    }).then(data =>
+exports.deleteData = async (req, res) => {
+    const t = await sequelize.transaction()
+    const uid = req.user.id
+    const id = req.params.id
+    try {
+        const user = await User.findAll({
+            attributes : ['id', 'name', 'totalAmount'],
+            where : {
+                id : uid
+            }
+            ,raw : true
+        })
+        const previosAmount = user[0].totalAmount
+        const expenseData = await Expense.findByPk(id, {
+            attributes: ['amount'],
+            transaction: t,
+            raw: true
+        });
+        const data = await Expense.destroy({
+            where: {
+                id: id
+            }
+        }, {transaction : t})
+        const totalAmount = previosAmount - expenseData.amount
+        // console.log(totalAmount, previosAmount)
+        await User.update({
+            totalAmount : totalAmount
+        }, {
+            where : {
+                id : uid
+            }
+        },
+        {transaction : t})
         res.status(200).json(data)
-    ).catch(err => console.log(err))
+        await t.commit()
+    } catch (err) {
+        await t.rollback()
+        console.log(err)
+    }
 }
 
-exports.updateExpense = (req, res) => {
+exports.updateExpense = async (req, res) => {
     const id = req.params.uid
-    console.log(req.body.amount)
-    Expense.update({
+    const t = await sequelize.transaction()
+    try {
+        Expense.update({
             amount: req.body.amount,
             description: req.body.description,
             category: req.body.category
@@ -85,8 +126,13 @@ exports.updateExpense = (req, res) => {
             where: {
                 id: id
             }
+        }, {
+            transaction: t
         })
-        .then(data =>
-            res.status(200).json(data)
-        ).catch(err => console.log(err))
+        await t.commit()
+        res.status(200).json(data)
+    } catch (err) {
+        await t.rollback()
+        console.log(err)
+    }
 }

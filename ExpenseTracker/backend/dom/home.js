@@ -169,6 +169,7 @@ async function additem(a) {
                 }
             })
             createli(data.data)
+            leaderBoardFunction()
         } catch (err) {
             console.log(err)
         }
@@ -182,9 +183,10 @@ async function additem(a) {
 }
 
 async function deleteItem(id) {
+    const token = localStorage.getItem('token')
     if (confirm('Are You Sure You want to delete this item?')) {
         try {
-            await axios.delete(`http://localhost:3000/deleteExpense/${id}`)
+            await axios.delete(`http://localhost:3000/deleteExpense/${id}`, {headers : {'Auth' : token}})
 
             const data = await axios.get(`http://localhost:3000/getExpenses`, {
                 headers: {
@@ -192,6 +194,7 @@ async function deleteItem(id) {
                 }
             })
             createli(data.data)
+            leaderBoardFunction()
         } catch (err) {
             console.log(err);
         }
@@ -220,6 +223,7 @@ async function saveUpdatedItem() {
             }
         })
         createli(data.data)
+        leaderBoardFunction()
     } catch (err) {
         console.log(err)
     }
@@ -236,11 +240,16 @@ function editItem(item) {
 
 function checkPremium(isPremium) {
     if (isPremium) {
-        document.getElementById('rzp-button').style.display = 'none'
+        parent = document.getElementById('rzp-button').parentElement
+        parent.style.display = 'none'
         const ul = document.createElement('ul')
-        ul.appendChild(document.createTextNode('Premium User'))
-        document.getElementById("navbar").appendChild(ul)
+        showleaderboard()
     }
+}
+
+function showleaderboard(){
+    const leaderboardButton = document.getElementById('leaderboard-toggle')
+    leaderboardButton.style.display = 'flex'
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -259,3 +268,70 @@ window.addEventListener("DOMContentLoaded", () => {
         })
         .catch((err) => console.log(err));
 });
+
+
+//LeaderBoard File
+const showLeaderboardButton = document.getElementById('show-leaderboard')
+showLeaderboardButton.addEventListener('click', leaderBoardFunction)
+
+async function leaderBoardFunction(e) {
+    const image = document.getElementById('image')
+    if(image.name === 'hidden'){
+        return showLeaderBoardIcon(image)
+    }
+    image.name = "hidden"
+    image.className = "fa-solid fa-eye-slash fa-lg"
+    document.getElementById('leaderboard').style.display = 'flex'
+    const token = document.getElementById('token')
+    try {
+        const result = await axios.get('http://localhost:3000/leaderboard', {
+            headers: {
+                'Auth': token
+            }
+        })
+        createleaderBoard(result.data)
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+function showLeaderBoardIcon(image){
+    image.className = "fa-solid fa-list fa-lg"
+    image.name = "original"
+    document.getElementById('leaderboard').style.display = 'none'
+
+}
+
+function createleaderBoard(data) {
+    const table = document.getElementById('leaderboardTable')
+    table.innerHTML = "";
+    for (let i = 0; i < data.length; i++) {
+        var item = data[i]
+        //creating a li element
+        var li = document.createElement('li')
+        li.className = "list-group-item d-flex"
+
+        //creating table element
+        var tr = document.createElement('tr')
+        var th = document.createElement('th');
+        th.scope = "row"
+        th.innerText = (i + 1)
+        tr.appendChild(th)
+
+
+        //creating td elements
+        var td = document.createElement('td')
+        var td2 = document.createElement('td')
+
+
+        td.appendChild(document.createTextNode(item.name))
+        td2.appendChild(document.createTextNode(item.totalAmount))
+
+        tr.appendChild(td)
+        tr.appendChild(td2)
+
+        // items.appendChild(li)
+        table.append(tr)
+    };
+};

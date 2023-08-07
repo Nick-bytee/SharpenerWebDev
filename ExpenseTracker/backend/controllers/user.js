@@ -1,23 +1,24 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt')
-
 const jwt = require('jsonwebtoken')
+const sequelize = require('../database/database')
 
-exports.addUser = (req, res) => {
-    bcrypt.hash(req.body.password,10, async(err, hash) => {
-        console.log(req.body.name)
-        User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: hash
-        }).then(
-            res.status(200).json({message : 'Registered Successfully, Redirecting to Login...'})
-        ).catch(err => {
+exports.addUser = async (req, res) => {
+    const t = await sequelize.transaction()
+    try {
+        const hash = await bcrypt.hash(req.body.password,10)
+            await User.create({
+                name: req.body.name,
+                email: req.body.email,
+                password: hash
+            }, {transaction : t})
+                res.status(200).json({message : 'Registered Successfully, Redirecting to Login...'})
+                await t.commit()
+        }catch(err) {
             console.log(err)
             res.status(400).json({message : 'Email Already Registered'})
-        }) 
-    })
-}
+            await t.rollback()
+}}
 
 function generateAccessToken(id, name) {
     return jwt.sign({userID : id, name : name},'secretkey')
