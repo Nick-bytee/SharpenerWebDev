@@ -1,5 +1,38 @@
 const Expense = require('../models/expense')
 const jwt = require('jsonwebtoken')
+const User = require('../models/user')
+
+exports.leaderboardData = async (req, res) => {
+    try {
+        const expenses = await Expense.findAll({
+            include: ({model : User, attributes : ['name']})
+        })
+
+        const users = {}
+
+        expenses.forEach(expense => {
+            const userId = expense.dataValues.userId
+            const amount = expense.dataValues.amount
+            const Username = expense.dataValues.user.dataValues.name
+            console.log(expense.dataValues.userId)
+
+            if (!users[userId]) {
+                users[userId] = {
+                    id: userId,
+                    name : Username,
+                    amount: amount
+                }
+            } else {
+                users[userId].amount += amount
+            }
+        });
+        const sortedUsers = Object.values(users)
+
+        sortedUsers.sort((a,b) => b.amount - a.amount)
+        res.status(200).json(sortedUsers)
+    }catch (err) {
+    console.log(err)
+}}
 
 exports.storeData = (req, res) => {
     const user = jwt.verify(req.body.token, 'secretkey')
@@ -16,15 +49,23 @@ exports.storeData = (req, res) => {
 exports.getData = async (req, res) => {
     const user = req.user
     try {
-        const expenses = await Expense.findAll({where : {
-            userId : user.id
-        }})
-        if(user.isPremium){
-            res.status(200).json({expenses, isPremium : true})
-        }else{
-            res.status(200).json({expenses, isPremium : false})
+        const expenses = await Expense.findAll({
+            where: {
+                userId: user.id
+            }
+        })
+        if (user.isPremium) {
+            res.status(200).json({
+                expenses,
+                isPremium: true
+            })
+        } else {
+            res.status(200).json({
+                expenses,
+                isPremium: false
+            })
         }
-    }catch(err) {
+    } catch (err) {
         console.log(err)
     }
 }

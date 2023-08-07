@@ -6,13 +6,13 @@ var editID;
 var token = localStorage.getItem('token')
 
 function createli(parsedData) {
+    checkPremium(parsedData.isPremium)
     if (document.getElementById('formdata').value === "Save") {
         return saveUpdatedItem()
     } else {
         table.innerHTML = "";
-        for (let i = 0; i < parsedData.length; i++) {
-            var item = parsedData[i]
-
+        for (let i = 0; i < parsedData.expenses.length; i++) {
+            var item = parsedData.expenses[i]
             //creating a li element
             var li = document.createElement('li')
             li.className = "list-group-item d-flex"
@@ -96,6 +96,8 @@ document.getElementById('rzp-button').onclick = async function (e) {
             "key": response.data.key_id,
             "order_id": response.data.order.id,
             "handler": async function (response) {
+                alert('Transaction Successful')
+                checkPremium(true)
                 try {
                     await axios.post('http://localhost:3000/purchase/updateTransactionStatus', {
                         order_id: options.order_id,
@@ -232,6 +234,15 @@ function editItem(item) {
     editID = item.id
 }
 
+function checkPremium(isPremium){
+    if(isPremium){
+        document.getElementById('rzp-button').style.display = 'none'
+        const ul = document.createElement('ul')
+        ul.appendChild(document.createTextNode('Premium User'))
+        document.getElementById("navbar").appendChild(ul)
+    }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
     axios
         .get(
@@ -242,11 +253,9 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         )
         .then((data) => {
-            if (data.data.isPremium) {
-                document.getElementById('rzp-button').style.display = 'none'
-            } else {
-                createli(data.data);
-            }
+            checkPremium(data.data.isPremium)
+            createli(data.data)
+        
         })
         .catch((err) => console.log(err));
 });

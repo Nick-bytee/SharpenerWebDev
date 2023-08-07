@@ -13,4 +13,5 @@ router.delete('/deleteExpense/:id', mainController.deleteData)
 
 router.put('/updateExpense/:uid', mainController.updateExpense)
 
+router.get('/leaderboard', mainController.leaderboardData)
 module.exports = router

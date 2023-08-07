@@ -21,7 +21,7 @@
         <img id="icon" src="./images/icon.png" alt="Null">
         <h4 class="heading">Expense Tracker</h4>
         <ul class="navbar-nav">
-          <li class="nav-item active">
+          <li class="nav-item active" id="navbar">
             <button id="rzp-button">
               <a class="nav-link" id="rzp-button">
                 <i class="fa-solid fa-star fa-xl" style="color: #0a0a0a; padding-left: 40px;"></i>
@@ -106,7 +106,7 @@
             <div class="expenseList"></div>
             <!-- expenses table -->
             <div class="container">
-              <div class="row">
+              <div class="row" id="items">
                   <div class="col-xl-12">
                     <h2 class="title">Expenses List</h2>
                       <div class="card">
@@ -127,7 +127,33 @@
                                   </table>
                               </div>
                               <!--end table-responsive-->
-                              <div class="pt-3 border-top text-right"><a href="#" class="text-primary">View all <i class="mdi mdi-arrow-right"></i></a></div>
+                              <div class="pt-3 border-top text-right"><button style="display: contents;" class="text-primary">View all <i class="mdi mdi-arrow-right"></i></button></div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- LeaderBoards Table -->
+              <div class="row" id="items">
+                  <div class="col-xl-12">
+                    <h2 class="title">LeaderBoard</h2>
+                      <div class="card">
+                          <div class="card-body">
+                              <h5 class="header-title pb-3 mt-0">Top Users</h5>
+                              <div class="table-responsive">
+                                  <table class="table table-hover mb-0">
+                                      <thead>
+                                          <tr class="align-self-center">
+                                              <th>Name</th>
+                                              <th>Amount</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody id="leaderboardTable">
+                                      </tbody>
+                                  </table>
+                              </div>
+                              <!--end table-responsive-->
+                              <div class="pt-3 border-top text-right"><button id="leaderboardButton"  style="display: contents;" class="text-primary">Show LeaderBoard <i class="mdi mdi-arrow-right"></i></a=button></div>
                           </div>
                       </div>
                   </div>
@@ -138,6 +164,7 @@
         </div>
       </div>
   <script src="../dom/home.js"></script>
+  <script src="../dom/leaderboard.js"></script>
 </body>
 
 </html>

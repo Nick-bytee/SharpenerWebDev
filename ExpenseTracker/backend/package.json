@@ -16,9 +16,13 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "serve" : "http-server --cors"
   },
   "author": "Nick",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
 }

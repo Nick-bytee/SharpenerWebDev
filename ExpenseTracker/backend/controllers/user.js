@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken')
 
 exports.addUser = (req, res) => {
     bcrypt.hash(req.body.password,10, async(err, hash) => {
-        console.log(err)
         console.log(req.body.name)
         User.create({
             name: req.body.name,
@@ -43,13 +42,12 @@ exports.signInUser = async (req, res) => {
                             const token = generateAccessToken(data.id,data.name,data.isPremium)
                             res.status(200).json({message : 'Logged In Successfully',success : true, token : token})
                         }else{
-                            console.log('working 2')
                             res.status(200).json({message : 'Incorrect Password', success : false})
                         }
                     })
                 }
             }else {
-                res.status(200).json({message : 'User Not Found', success : false})
+                res.status(200).json({message : 'User Not Found', success : false, user : false})
             }
     }
     catch(err) {

@@ -1,7 +1,6 @@
 const signUp = document.getElementById('signUp')
 document.addEventListener('submit', addUser)
 
-
 const signIn = document.getElementById('signIn')
 signIn.addEventListener('click', loginPage)
 
@@ -16,9 +15,8 @@ async function addUser(e) {
     const name = document.getElementById('name').value
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
-
     console.log(name)
-    const myObj = {
+     const myObj = {
         name: name,
         email: email,
         password: password
@@ -88,18 +86,22 @@ async function validateUser() {
     }
     try {
         const result = await axios.post('http://localhost:3000/users/signIn', validate)
-        if(result.data.success){
-            const message = document.getElementById('Message')
+        const message = document.getElementById('Message')
+        if (result.data.success) {
             message.innerHTML = result.data.message
             message.style.color = 'green'
             localStorage.setItem('token', result.data.token)
             setTimeout(() => {
                 window.location.href = "./index.html"
             }, 1000)
+        } else if (
+            !result.data.success && !result.data.user
+        ) {
+            message.innerHTML = result.data.message
+        }else{
+            message.innerHTML = result.data.message   
         }
-    }
-    
-    catch(err){
+    } catch (err) {
         console.log(err)
     }
 
