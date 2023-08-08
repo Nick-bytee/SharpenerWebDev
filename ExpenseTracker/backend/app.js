@@ -15,12 +15,16 @@ const passwordRoute = require('./routes/password')
 const User = require('./models/user')
 const Expenses = require('./models/expense')
 const Orders = require('./models/order')
+const ForgotPasswordRequest =  require('./models/forgotPasswordRequests')
 
 Expenses.belongsTo(User)
 User.hasMany(Expenses)
 
 User.hasMany(Orders)
 Orders.belongsTo(User)
+
+User.hasMany(ForgotPasswordRequest)
+
 
 app.use('/password', passwordRoute)
 app.use('/purchase', purchaseRoute)
