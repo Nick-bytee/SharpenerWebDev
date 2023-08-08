@@ -1,11 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<header id="main-header" class="bg-dark text-white">
-
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Expense Tracker</title>
+    <title>Reports</title>
     <script src="https://kit.fontawesome.com/90f3537cd6.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../public/css/index.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -42,20 +40,15 @@
       </div>
     </nav>
   </head>
-
-  <!-- Sidebar -->
-</header>
-
+</head>
 <body id="body">
-
-
-  <div class="container-fluid">
+    <div class="container-fluid">
         <div class="row flex-nowrap">
           <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 ">
               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                 <li class="nav-item">
-                  <a href="./index.html" class="nav-link align-middle px-0 active">
+                  <a href="./index.html" class="nav-link align-middle px-0">
                     <i class="fa-solid fa-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
                   </a>
                 </li>
@@ -68,7 +61,7 @@
                     <i class="fa-solid fa-chart-simple"></i> <span class="ms-1 d-none d-sm-inline">Expenses</span></a>
                 </li>
                 <li>
-                  <a href="./reports.html" class="nav-link px-0 align-middle">
+                  <a href="./reports.html" class="nav-link px-0 align-middle active">
                     <i class="fa-solid fa-file-lines"></i> <span class="ms-1 d-none d-sm-inline">Reports</span></a>
                 </li>
               </ul>
@@ -90,86 +83,47 @@
             </div>
           </div>
           <div class="col py-3">
-            <div class="form-wrapper">
-              <form id="addForm" class="form-inline mb-3">
-                <input type="text" min="1" class="form-control mr-2" id="amount" placeholder="Enter Amount in ₹">
-                <br>
-                <input type="text" class="form-control mr-2" id="desc" placeholder="Enter Description">
-                <br>
-                <select class="form-select" aria-label="select" id="category">
-                  <option selected>Choose a Category</option>
-                  <option value="1">Movies</option>
-                  <option value="2">Food</option>
-                  <option value="3">Party</option>
-                  <option value="4">Shopping</option>
-                </select>
-                <br>
-                <input type="submit" class="btn btn-dark" value="Add Expense" id='formdata'>
-              </form>
-            </div>
-
             <div class="expenseList"></div>
             <!-- expenses table -->
             <div class="container">
               <div class="row" id="items">
                   <div class="col-xl-12">
-                    <h2 class="title">Expenses List</h2>
-                      <div class="card">
+                    <div style="display: flex; justify-content: center;">
+                      <h3>Reports</h3>
+                    </div>
+                      <Monthly class="card">
                           <div class="card-body">
-                              <h5 class="header-title pb-3 mt-0">Payments</h5>
+                              <h5 class="header-title pb-3 mt-0">Monthly</h5>
                               <div class="table-responsive">
                                   <table class="table table-hover mb-0">
                                       <thead>
                                           <tr class="align-self-center">
-                                              <th>Name</th>
-                                              <th>Category</th>
+                                              <th>Date</th>
                                               <th>Description</th>
-                                              <th>Amount</th>
+                                              <th>Category</th>
+                                              <th>Income</th>
+                                              <th>Expense</th>
                                           </tr>
                                       </thead>
-                                      <tbody id="table">
+                                      <tfoot>
+                                        <tr class="alert-self-center">
+                                          <th>Total</th>
+                                        </tr>
+                                      </tfoot>
+                                        <tbody id="table">
                                       </tbody>
                                   </table>
                               </div>
                               <!--end table-responsive-->
-                              <div class="pt-3 border-top text-right"><button style="display: contents;" class="text-primary">View all <i class="mdi mdi-arrow-right"></i></button></div>
                           </div>
                       </div>
                   </div>
               </div>
-
-              <!-- LeaderBoards Table -->
-              <div class="row" id="leaderboard">
-                  <div class="col-xl-12">
-                    <h2 class="title">LeaderBoard</h2>
-                      <div class="card">
-                          <div class="card-body">
-                              <h5 class="header-title pb-3 mt-0">Top Users</h5>
-                              <div class="table-responsive">
-                                  <table class="table table-hover mb-0">
-                                      <thead>
-                                          <tr class="align-self-center">
-                                              <th>#</th>
-                                              <th>Name</th>
-                                              <th>Amount</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody id="leaderboardTable">
-                                      </tbody>
-                                  </table>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--end table-responsive-->
           </div>
+          <!-- Reports Table -->
         </div>
           </div>
         </div>
-      </div>
-  <script src="../dom/home.js"></script>
-  <script src="../dom/leaderboard.js"></script>
+    <link rel="stylesheet" href="../public/css/index.css">
 </body>
-
 </html>

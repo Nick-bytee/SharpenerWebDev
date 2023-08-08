@@ -30,6 +30,12 @@
 
 .nav-link{
     margin-bottom: 10px;
+    color: white !important;
+}
+
+.active {
+    background-color: unset !important;
+    color : blue !important;
 }
 
 .vertical-menu {
@@ -69,6 +75,8 @@
     background-color: #04AA6D;
     color: white;
 }
+
+
 
 .heading {
     color: black;
