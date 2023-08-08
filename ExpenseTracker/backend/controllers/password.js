@@ -64,7 +64,7 @@ exports.resetPassword = async (req, res) => {
         const data = await ForgotPasswordRequest.findOne({
             where: {
                 uuid: uuid
-            }
+            },attributes : ['uuid'],raw:true
         })
         console.log(data)
         // data.isActive = false
@@ -83,17 +83,17 @@ exports.resetPassword = async (req, res) => {
         <body style="height: fit-content;">
             <div class="containers" id="container" style="display: grid; justify-content: center;">
                 <h3 class="heading">Reset Your Passowrd</h3>
-                <form method="post" id = 'email-form' action="/password/updatePassword/${uuid}" method='post'>
+                <form method="post" id = 'email-form' action="/password/updatePassword/${uuid}">
                         <div class="mb-3">
                         <label class="form-label">Enter Your New Password</label>
-                        <input type="password" class="form-control" id="password" aria-describedby="emailHelp">
+                        <input type="password" class="form-control" id="password">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Confirm Your Password</label>
-                            <input type="password" class="form-control" id="password2" aria-describedby="emailHelp"">
+                            <input type="password" class="form-control" id="password2" name="newPassword" onkeyup="checkPasswordMatch()">
                         </div>
                         <p id="message"></p>
-                        <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="submit" disabled>Submit</button>
                         <button class="btn btn-primary" id="forgot-psk" style="position: absolute; margin-left: 10px; display: none;">Forgot Password?</button>
                 </form>
                 <img id="image" src="./images/forgot_password.png" alt="">
@@ -118,8 +118,11 @@ exports.resetPassword = async (req, res) => {
                             button.removeAttribute("disabled")
                     }
             }
+            const form = document.getElementById('email-form');
+            form.addEventListener('submit', formsubmitted);
             function formsubmitted(e){
                 e.preventDefault();
+            }
         </script>
 </body>
     </html>`)
@@ -136,9 +139,19 @@ exports.updatePassword = async (req, res) => {
         const data = await ForgotPasswordRequest.findOne({
             where: {
                 uuid: uuid
-            }
+            }, attributes: ['userId'],
+            raw : true
         })
-        console.log(data)
+
+        //update Password
+        // const user =  User.findOne({
+        //     where : {id : data.userId}
+        // })
+        // if(user){
+        //     const hash = await bcrypt.hash(,10)
+        // }
+        
+
     } catch (err) {
         console.log(err)
     }
