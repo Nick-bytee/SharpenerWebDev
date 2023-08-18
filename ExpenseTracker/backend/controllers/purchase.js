@@ -35,7 +35,6 @@ exports.purchaseMembership = async (req, res) => {
 exports.updateTransactionStatus = async (req, res) => {
 
     try {
-        console.log(req.body)
         const payment_id = req.body.paymentId;
         const order_id = req.body.order_id;
         const status = req.body.status

@@ -2,6 +2,11 @@ const Expense = require('../models/expense')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const sequelize = require('../database/database')
+const AWS = require('aws-sdk')
+const DownloadHistory = require('../models/downloadHistory')
+const { resolve } = require('path')
+const { fileURLToPath } = require('url')
+require('dotenv').config()
 
 exports.leaderboardData = async (req, res) => {
     const result = await User.findAll({
@@ -110,6 +115,75 @@ exports.deleteData = async (req, res) => {
         await t.commit()
     } catch (err) {
         await t.rollback()
+        console.log(err)
+    }
+}
+
+exports.generateReport = async (req, res) => {
+    try{
+        const expenses = await req.user.getExpenses({
+            raw: true
+        })
+        const userId = req.user.id
+        const data = JSON.stringify(expenses)
+        const date = new Date()
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
+        const name  = `Expense ${year.toString()}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`;
+        const fileName = `Expenses ${userId}/${name}.txt`
+        const fileURL = await downloadReport(data, fileName)
+        req.user.createDownloadHistory({
+            fileURL : fileURL,
+            fileName : name
+        })
+        if(!fileURL){
+            throw new Error()
+        }else {
+            res.status(200).json({URL : fileURL})
+        }
+    }catch(err){
+        console.log(err)
+        res.status(500).json({message : 'An Error Occured'})
+    }
+}
+
+async function downloadReport(data, filename,){
+    let s3Bucket = new AWS.S3({
+        accessKeyId : process.env.AWS_ACCESS_KEY,
+        secretAccessKey : process.env.AWS_SECRET_KEY
+    })
+
+    return new Promise((resolve, reject) => {
+
+        s3Bucket.createBucket(() => {
+            var params = {
+                Bucket : process.env.AWS_BUCKET_NAME,
+                Key : filename,
+                Body : data,
+                ACL : 'public-read',
+                ContentType: 'text/csv'
+            }
+            s3Bucket.upload(params, (err, response) => {
+                if(err){
+                    console.log(err)
+                    reject()
+                }else{
+                    resolve(response.Location)
+                    console.log(response)
+                }
+            })
+        })
+    })
+}
+
+exports.getDownloadHistory = async(req, res) => {
+    try{
+        const response = await DownloadHistory.findAll({
+            where : {userId : req.user.id}
+        })
+        res.status(200).json({data : response, isPremium : req.user.isPremium})
+    }catch(err){
         console.log(err)
     }
 }

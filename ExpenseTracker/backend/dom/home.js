@@ -97,7 +97,7 @@ document.getElementById('rzp-button').onclick = async function (e) {
             "order_id": response.data.order.id,
             "handler": async function (response) {
                 alert('Transaction Successful')
-                checkPremium(true)
+                // checkPremium(true)
                 try {
                     await axios.post('http://localhost:3000/purchase/updateTransactionStatus', {
                         order_id: options.order_id,
@@ -108,6 +108,7 @@ document.getElementById('rzp-button').onclick = async function (e) {
                             'Auth': token
                         }
                     });
+                    checkPremium(true)
                 } catch (error) {
                     console.log(error);
                 }
@@ -247,6 +248,9 @@ function checkPremium(isPremium) {
         parent.style.display = 'none'
         const ul = document.createElement('ul')
         showleaderboard()
+        const report = document.getElementById('reports')
+        report.style.opacity = "1"
+        report.className = "nav-link px-0 align-middle"
     }
 }
 
@@ -265,6 +269,7 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         )
         .then((data) => {
+            console.log(data.data)
             checkPremium(data.data.isPremium)
             createli(data.data)
 

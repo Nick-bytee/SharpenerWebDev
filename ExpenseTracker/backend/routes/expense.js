@@ -14,4 +14,11 @@ router.delete('/deleteExpense/:id', authController.authenticate, mainController.
 // router.put('/updateExpense/:uid', mainController.updateExpense)
 
 router.get('/leaderboard', mainController.leaderboardData)
+
+router.get('/getReport', authController.authenticate, mainController.getData)
+
+router.get('/downloadReport', authController.authenticate, mainController.generateReport)
+
+router.get('/getDownloadHistory', authController.authenticate, mainController.getDownloadHistory)
+
 module.exports = router

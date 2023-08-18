@@ -16,6 +16,7 @@ const User = require('./models/user')
 const Expenses = require('./models/expense')
 const Orders = require('./models/order')
 const ForgotPasswordRequest =  require('./models/forgotPasswordRequests')
+const DownloadHistory = require('./models/downloadHistory')
 
 Expenses.belongsTo(User)
 User.hasMany(Expenses)
@@ -24,6 +25,9 @@ User.hasMany(Orders)
 Orders.belongsTo(User)
 
 User.hasMany(ForgotPasswordRequest)
+
+DownloadHistory.belongsTo(User)
+User.hasMany(DownloadHistory)
 
 
 app.use('/password', passwordRoute)

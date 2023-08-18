@@ -61,11 +61,11 @@
                     <i class="fa-solid fa-chart-simple"></i> <span class="ms-1 d-none d-sm-inline">Expenses</span></a>
                 </li>
                 <li>
-                  <a href="./reports.html" class="nav-link px-0 align-middle active">
+                  <a href="./reports.html" class="nav-link px-0 align-middle">
                     <i class="fa-solid fa-file-lines"></i> <span class="ms-1 d-none d-sm-inline">Reports</span></a>
                 </li>
                 <li>
-                  <a href="./history.html" class="nav-link px-0 align-middle">
+                  <a href="./history.html" class="nav-link px-0 align-middle active">
                     <i class="fa-solid fa-clock-rotate-left" style="color: #ffffff;"></i> <span class="ms-1 d-none d-sm-inline">Download History</span></a>
                 </li>
               </ul>
@@ -93,32 +93,26 @@
               <div class="row" id="items">
                   <div class="col-xl-12">
                     <div style="display: flex; justify-content: center;">
-                      <h3>Reports</h3>
+                      <h3>Downloads</h3>
                     </div>
                       <Monthly class="card">
                           <div class="card-body">
-                              <h5 class="header-title pb-3 mt-0">Monthly</h5>
                               <div class="table-responsive">
                                   <table class="table table-hover mb-0 table-sm">
                                       <thead>
                                           <tr class="align-self-center">
                                               <th>#</th>
                                               <th>Date</th>
-                                              <th>Description</th>
-                                              <th>Category</th>
-                                              <th>Amount</th>
+                                              <th>FileName</th>
                                           </tr>
                                       </thead>
                                       <tfoot>
                                         <tr class="alert-self-center">
-                                          <th>Total</th>
-                                          <td id="total"></td>
                                         </tr>
                                       </tfoot>
-                                        <tbody id="reportsTable">
+                                        <tbody id="downloadsTable">
                                       </tbody>
                                   </table>
-                                  <div class="pt-3 border-top text-right"><button id="button" style="display: contents;"><i class="fa-solid fa-file-arrow-down fa-xl"></i> Download</button></div>
                                   <div><p id="err" style="color: red;"></></div>
                                 </div>
                               <!--end table-responsive-->
@@ -132,6 +126,6 @@
           </div>
         </div>
     <link rel="stylesheet" href="../public/css/index.css">
-    <script src="../dom/reports.js"></script>
+    <script src="../dom/history.js"></script>
 </body>
 </html>
