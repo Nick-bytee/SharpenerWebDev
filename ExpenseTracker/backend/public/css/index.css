@@ -3,45 +3,50 @@
     max-width: 5%;
 }
 
-#addForm{
+#addForm {
     display: flex;
 }
 
-.col-auto{
+.col-auto {
     border-radius: 0px 10px 0 0;
 }
 
-#leaderboard-toggle{
+#leaderboard-toggle {
     display: none;
 }
 
-.nav-leaderboard{
+.nav-leaderboard {
     border: none;
     cursor: pointer;
     position: absolute;
     display: contents;
 }
 
-.buy-premium{
+.buy-premium {
     display: contents;
     font-size: small;
     cursor: pointer;
 }
 
-.nav-link{
+.nav-link {
     margin-bottom: 10px;
     color: white !important;
 }
 
-.pagination{
+.pagination {
     display: flex;
     justify-content: center;
     padding: 3px;
 }
 
+
+.rowsPerPage {
+    display: flex;
+}
+
 .active {
     background-color: unset !important;
-    color : blue !important;
+    color: blue !important;
 }
 
 .vertical-menu {
@@ -49,18 +54,18 @@
     width: 30%;
 }
 
-.container{
+.container {
     display: flex;
     flex-wrap: wrap;
 }
 
-#leaderboard{
+#leaderboard {
     flex-grow: 1;
     flex-basis: 300px;
     display: none;
 }
 
-#items{
+#items {
     flex-grow: 1;
     flex-basis: 300px;
 }
@@ -107,7 +112,7 @@
     background-color: ghostwhite;
 }
 
-.form-wrapper{
+.form-wrapper {
     display: flex;
     width: 100%;
     justify-content: center;

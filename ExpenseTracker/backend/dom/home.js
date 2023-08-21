@@ -259,15 +259,23 @@ function showleaderboard() {
     leaderboardButton.style.display = 'flex'
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", getData);
+
+async function getData() {
+    const rowsPerPage = localStorage.getItem('rowsPerPage')
+    let rows = 10
+    if (rowsPerPage) {
+        rows = rowsPerPage
+        const row = document.getElementById('rowsperpage')
+        row.value = rows
+    }
     const params = new URLSearchParams(window.location.search);
     const page = params.get("page") || 1
     axios
         .get(
-            `http://localhost:3000/getExpenses?page=${page}`, {
+            `http://localhost:3000/getExpenses?page=${page}&count=${rows}`, {
                 headers: {
                     'Auth': token,
-                    // 'Count' : itemCount
                 }
             }
         )
@@ -278,7 +286,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
         })
         .catch((err) => console.log(err));
-});
+}
 
 
 //LeaderBoard File
@@ -364,10 +372,10 @@ function pagination({
     previousPage,
     lastPage,
     currentPage
-}){
+}) {
     const pagination = document.getElementById('pagination')
     pagination.innerHTML = ''
-    if(hasPreviousPage){
+    if (hasPreviousPage) {
         const btn2 = document.createElement('li')
         const a = document.createElement('a')
         btn2.className = "page-item";
@@ -385,10 +393,10 @@ function pagination({
     a.className = "page-link"
     a.innerHTML = currentPage
     a.style.cursor = "pointer"
-    a.addEventListener('click',() => getProducts(currentPage))
+    a.addEventListener('click', () => getProducts(currentPage))
     pagination.appendChild(btn1)
 
-    if(hasNextPage){
+    if (hasNextPage) {
         const btn3 = document.createElement('li')
         const a = document.createElement('a')
         btn3.className = "page-item";
@@ -401,13 +409,29 @@ function pagination({
     }
 }
 
-async function getProducts(page){
-    try{
-        const data = await axios.get(`http://localhost:3000/getExpenses?page=${page}`,{headers : {'Auth' : token}})
-            checkPremium(data.data.isPremium)
-            createli(data.data)
-            pagination(data.data)
-    }catch(err){
+async function getProducts(page) {
+    const rowsPerPage = localStorage.getItem('rowsPerPage')
+    let rows = 10
+    if (rowsPerPage) {
+        rows = rowsPerPage
+    }
+    try {
+        const data = await axios.get(`http://localhost:3000/getExpenses?page=${page}&count=${rows}`, {
+            headers: {
+                'Auth': token
+            }
+        })
+        checkPremium(data.data.isPremium)
+        createli(data.data)
+        pagination(data.data)
+    } catch (err) {
         console.log(err)
     }
 }
+
+const select = document.getElementById("rowsperpage")
+select.addEventListener('change', () => {
+    const selectedElement = event.target.value
+    localStorage.setItem('rowsPerPage', selectedElement)
+    getData()
+})

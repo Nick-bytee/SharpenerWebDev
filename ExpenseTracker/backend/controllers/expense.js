@@ -56,7 +56,7 @@ exports.storeData = async (req, res) => {
 
 exports.getData = async (req, res) => {
     const user = req.user
-    const ITEMS_PER_PAGE = 10
+    const ITEMS_PER_PAGE = parseInt(req.query.count) || 10
     const page = req.query.page || 1;
     try {
         const totalItems = await Expense.count({
@@ -70,7 +70,6 @@ exports.getData = async (req, res) => {
             },
             offset : (page-1) * ITEMS_PER_PAGE,
             limit : ITEMS_PER_PAGE
-            
         })
         if (user.isPremium) {
             res.status(200).json({
