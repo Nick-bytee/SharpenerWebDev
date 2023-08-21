@@ -33,6 +33,12 @@
     color: white !important;
 }
 
+.pagination{
+    display: flex;
+    justify-content: center;
+    padding: 3px;
+}
+
 .active {
     background-color: unset !important;
     color : blue !important;

@@ -260,18 +260,21 @@ function showleaderboard() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const page = params.get("page") || 1
     axios
         .get(
-            "http://localhost:3000/getExpenses", {
+            `http://localhost:3000/getExpenses?page=${page}`, {
                 headers: {
-                    'Auth': token
+                    'Auth': token,
+                    // 'Count' : itemCount
                 }
             }
         )
         .then((data) => {
-            console.log(data.data)
             checkPremium(data.data.isPremium)
             createli(data.data)
+            pagination(data.data)
 
         })
         .catch((err) => console.log(err));
@@ -353,3 +356,58 @@ function createleaderBoard(data) {
         table.append(tr)
     };
 };
+
+function pagination({
+    hasNextPage,
+    nextPage,
+    hasPreviousPage,
+    previousPage,
+    lastPage,
+    currentPage
+}){
+    const pagination = document.getElementById('pagination')
+    pagination.innerHTML = ''
+    if(hasPreviousPage){
+        const btn2 = document.createElement('li')
+        const a = document.createElement('a')
+        btn2.className = "page-item";
+        btn2.appendChild(a)
+        a.className = "page-link"
+        a.innerHTML = previousPage
+        a.style.cursor = "pointer"
+        a.addEventListener('click', () => getProducts(previousPage))
+        pagination.appendChild(btn2)
+    }
+    const btn1 = document.createElement('li');
+    const a = document.createElement('a');
+    btn1.className = "page-item active";
+    btn1.appendChild(a)
+    a.className = "page-link"
+    a.innerHTML = currentPage
+    a.style.cursor = "pointer"
+    a.addEventListener('click',() => getProducts(currentPage))
+    pagination.appendChild(btn1)
+
+    if(hasNextPage){
+        const btn3 = document.createElement('li')
+        const a = document.createElement('a')
+        btn3.className = "page-item";
+        btn3.appendChild(a)
+        a.className = "page-link"
+        a.innerHTML = nextPage
+        a.style.cursor = "pointer"
+        a.addEventListener('click', () => getProducts(nextPage))
+        pagination.appendChild(btn3)
+    }
+}
+
+async function getProducts(page){
+    try{
+        const data = await axios.get(`http://localhost:3000/getExpenses?page=${page}`,{headers : {'Auth' : token}})
+            checkPremium(data.data.isPremium)
+            createli(data.data)
+            pagination(data.data)
+    }catch(err){
+        console.log(err)
+    }
+}

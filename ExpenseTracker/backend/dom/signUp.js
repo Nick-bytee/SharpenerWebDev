@@ -79,6 +79,7 @@ function loginPage() {
     if (name) {
         const parent = name.parentElement
         parent.removeChild(name)
+        console.log('working')
     }
 }
 

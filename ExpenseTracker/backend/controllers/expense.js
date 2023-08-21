@@ -56,16 +56,32 @@ exports.storeData = async (req, res) => {
 
 exports.getData = async (req, res) => {
     const user = req.user
+    const ITEMS_PER_PAGE = 10
+    const page = req.query.page || 1;
     try {
+        const totalItems = await Expense.count({
+            where : {
+                userId : req.user.id
+            }
+        })
         const expenses = await Expense.findAll({
             where: {
-                userId: user.id
-            }
+                userId: user.id,
+            },
+            offset : (page-1) * ITEMS_PER_PAGE,
+            limit : ITEMS_PER_PAGE
+            
         })
         if (user.isPremium) {
             res.status(200).json({
                 expenses,
-                isPremium: true
+                isPremium: true,
+                hasNextPage : ITEMS_PER_PAGE * page < totalItems,
+                nextPage : 1 + +page,
+                hasPreviousPage : page > 1,
+                previousPage : page - 1,
+                lastPage : Math.ceil(totalItems / ITEMS_PER_PAGE),
+                currentPage : page
             })
         } else {
             res.status(200).json({
